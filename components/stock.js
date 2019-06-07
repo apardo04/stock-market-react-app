@@ -1,11 +1,12 @@
 import Link from 'next/link'
 
 const Stock = props => {
+    let imageError = (ev) => ev.target.src = "static/assets/images/404_img.jpg"
     return (    
         <React.Fragment>
             <div className="md:flex bg-white rounded-lg p-6">
-                <div class="md:flex-shrink-0">
-                    <img className="rounded-sm max-w-sm" src={"https://storage.googleapis.com/iex/api/logos/" + props.data.symbol + ".png"} />
+                <div className="md:flex-shrink-0">
+                    <img onError={imageError} className="rounded-sm max-w-sm" src={"https://storage.googleapis.com/iex/api/logos/" + props.data.symbol + ".png"} />
                 </div>
                 <div className="mt-4 md:mt-0 md:ml-6">
                     <h2 className="block mt-1 text-lg leading-tight font-semibold text-gray-900 hover:underline">{props.data.symbol} | {props.data.companyName}</h2>

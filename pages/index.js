@@ -14,7 +14,6 @@ const App = props => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [color, setColor] = useState("black")
 
-
   const search = searchValue => {    
     console.log("searching for.." + searchValue)
     setLoading(true);    
@@ -36,12 +35,19 @@ const App = props => {
         axios
           .get(`https://sandbox.iexapis.com/stable/stock/${searchValue}/quote?token=Tpk_0e279c07400d4e8abbc68cf27ae41263&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap`)
           .then(res => {
+            console.log("res.data = " + res.data)
             Object.entries(res.data).map(([key,value]) => 
               dataArr[key] = value
             )        
             setColor((dataArr["changePercent"].toString()[0] == '-') ? "red" : "green")
             setStock(dataArr)
             setLoading(false)
+          })
+          .catch(function (error) {
+            if (error.response) {
+              setErrorMessage(error.response.data)
+              setLoading(false);
+            }
           })
   };
   
@@ -63,9 +69,12 @@ const App = props => {
           <div className="errorMessage">error: {errorMessage}</div>
       :
         stock.symbol ?
-          <Stock data={stock} color={color} /> 
+          <div>
+            <Stock data={stock} color={color} /> 
+
+          </div>
       :
-          <div>search for soemthing</div>
+          <div>search for something</div>
       }      
     </Layout>
   )
