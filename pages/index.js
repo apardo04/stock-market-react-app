@@ -1,81 +1,16 @@
 import Layout from '../components/layout'
-import Link from 'next/link'
-import fetch from 'isomorphic-unfetch'
-import axios from 'axios';
 import '../static/assets/css/styles.css'
-import {useState, useEffect} from 'react'
-import Search from '../components/search'
-import Stock from '../components/stock'
-
+import GetStock from '../components/getStock';
+import StockSearch from './stockSearch';
 
 const App = props => {
-  const [loading, setLoading] = useState(false)
-  const [stock, setStock] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [color, setColor] = useState("black")
-
-  const search = searchValue => {    
-    console.log("searching for.." + searchValue)
-    setLoading(true);    
-    setErrorMessage(null);
-    /*let res = fetch(`https://sandbox.iexapis.com/stable/stock/${searchValue}/quote?token=Tpk_0e279c07400d4e8abbc68cf27ae41263&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap`)
-      .then(response => response.json())
-      .then(jsonResponse => { 
-        if (jsonResponse.symbol) {
-          setStock(jsonResponse);   
-          console.log("stock: " + stock.toString())  
-          setLoading(false);
-        } else {          
-          setErrorMessage("error");
-          console.log("search error: " + jsonResponse) 
-          setLoading(false);
-        }
-      });  */
-        let dataArr = []
-        axios
-          .get(`https://sandbox.iexapis.com/stable/stock/${searchValue}/quote?token=Tpk_0e279c07400d4e8abbc68cf27ae41263&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap`)
-          .then(res => {
-            console.log("res.data = " + res.data)
-            Object.entries(res.data).map(([key,value]) => 
-              dataArr[key] = value
-            )        
-            setColor((dataArr["changePercent"].toString()[0] == '-') ? "red" : "green")
-            setStock(dataArr)
-            setLoading(false)
-          })
-          .catch(function (error) {
-            if (error.response) {
-              setErrorMessage(error.response.data)
-              setLoading(false);
-            }
-          })
-  };
-  
-
-  useEffect(() => {    
-    //console.log("useEffect stock value: " + stock)
-  })
- 
-
+  let stocks = ["amzn", "bby"]
   return(
     <Layout page="index" title="" description="">
-      <Search search={search} />
-
-      <h1></h1>
-      {loading && !errorMessage ? 
-        (<span>loading...</span>) 
-      : 
-        errorMessage ? 
-          <div className="errorMessage">error: {errorMessage}</div>
-      :
-        stock.symbol ?
-          <div>
-            <Stock data={stock} color={color} /> 
-
-          </div>
-      :
-          <div>search for something</div>
-      }      
+      {stocks.map(stock => {
+        return <GetStock stockToFind={stock} />
+      })}
+      
     </Layout>
   )
 }

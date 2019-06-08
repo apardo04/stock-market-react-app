@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 const Stock = props => {
+    console.log("Stock component called")
     let imageError = (ev) => ev.target.src = "static/assets/images/404_img.jpg"
     return (    
         <React.Fragment>
