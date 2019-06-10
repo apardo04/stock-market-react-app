@@ -1,2 +1,56 @@
 @tailwind base;
 @tailwind utilities;
+
+.stock-image {
+    max-width: 128px;
+    height: 128px;
+}
+
+.modal {
+    display: flex; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+  
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 16% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+}
+  
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 64px;
+    font-weight: bold;
+}
+  
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.search-icon {
+    position: absolute;
+    margin-left: 20px;
+    margin-top: 9px;
+}
+.arrow-right {
+    position: absolute;
+    margin-top: -32px;
+    margin-left: 228px;
+    pointer-events: all;
+    cursor: pointer;
+}

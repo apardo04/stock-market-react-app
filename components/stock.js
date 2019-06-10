@@ -1,16 +1,14 @@
-import Link from 'next/link'
-
 const Stock = props => {
-    console.log("Stock component called")
+    console.log("Stock component called for stock = " + props.data.symbol)
     let imageError = (ev) => ev.target.src = "static/assets/images/404_img.jpg"
     return (    
         <React.Fragment>
-            <div className="md:flex bg-white rounded-lg p-6">
-                <div className="md:flex-shrink-0">
-                    <img onError={imageError} className="rounded-sm max-w-sm" src={"https://storage.googleapis.com/iex/api/logos/" + props.data.symbol + ".png"} />
+            <div className="bg-white rounded-lg mb-10 mr-10 xs:p-1 lg:w-full lg:p-6">
+                <div className="stock-image hidden">
+                    <img onError={imageError} className="p-2" src={"https://storage.googleapis.com/iex/api/logos/" + props.data.symbol + ".png"} />
                 </div>
                 <div className="mt-4 md:mt-0 md:ml-6">
-                    <h2 className="block mt-1 text-lg leading-tight font-semibold text-gray-900 hover:underline">{props.data.symbol} | {props.data.companyName}</h2>
+                    <span className="block mt-1 text-lg leading-tight font-semibold text-gray-900 hover:underline">{props.data.symbol} | {props.data.companyName}</span>
                     <ul className="mt-2 text-black-600">
                         <li>Current Price: <span className={props.color}>${parseFloat(props.data.latestPrice).toFixed(2).toLocaleString()}</span></li>
                         <li>Change: <span className={props.color}>${parseFloat(props.data.change).toFixed(2)}</span></li>

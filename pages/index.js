@@ -1,19 +1,44 @@
+import { useState } from 'react'
 import Layout from '../components/layout'
 import '../static/assets/css/styles.css'
 import GetStock from '../components/getStock';
 import StockSearch from './stockSearch';
+import Search from  '../components/search'
 
 const App = props => {
-  let stocks = ["amzn", "bby"]
+  const [stockModal, toggleStockModal] = useState(false)
+  const [searchedStock, setSearchedStock] = useState("")
+
+  const search = searchValue => {
+    setSearchedStock(searchValue)
+    toggleStockModal(true)
+  }
+  
+  let stocks = ["amzn", "dis", "amd", "spyd", "spwr"]
+
   return(
     <Layout page="index" title="" description="">
-      {stocks.map(stock => {
-        return <GetStock stockToFind={stock} />
-      })}
-      
+      {stockModal && 
+        <div id="myModal" className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => toggleStockModal(!stockModal)}>&times;</span>
+            <GetStock stockToFind={searchedStock} />
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Add</button>
+          </div>
+        </div>
+        
+      }
+      <Search search={search} />
+      <div className="flex flex-wrap ">
+        {stocks.map(stock => {
+          return <GetStock stockToFind={stock} key={stock} />
+        })}
+      </div>
     </Layout>
   )
 }
+
+export default App
 /*App.getInitialProps = async function() {
   let res = await fetch('https://sandbox.iexapis.com/stable/stock/WYNN/quote?token=Tpk_0e279c07400d4e8abbc68cf27ae41263&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap')
   //let res = await fetch('https://cloud.iexapis.com/stable/stock/AMD/quote?token=pk_715d9aa675fa4cc58576afda2e5b750a')
@@ -66,6 +91,3 @@ App.getInitialProps = async function() {
 
 };
 */
-
-
-export default App
