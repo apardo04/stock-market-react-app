@@ -34,6 +34,16 @@ const GetStock = props => {
     })
   }
 
+  const addToPortfolio = () => {
+      console.log("adding " + props.stockToFind + " to portfolio")
+      axios.post(`http://localhost:3001/api/stocks?userID=2&stock=${stock.symbol}`, () => {})
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
   useEffect(() => {  
     console.log("useEffect called for stock = " + props.stockToFind)
     search(props.stockToFind)  
@@ -52,8 +62,11 @@ const GetStock = props => {
           </div>
         </div>
       :
-        <div>
+        <div className="bg-white rounded-lg mb-10 mr-10 xs:p-1 lg:p-6">
           <Stock data={stock} color={color} />
+          {props.modal &&
+            <button onClick={addToPortfolio} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-3 border border-blue-700 rounded content-center">Add To Portfolio</button>
+          }
         </div>
       }      
     </React.Fragment>

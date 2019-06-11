@@ -14,23 +14,19 @@ const App = props => {
     toggleStockModal(true)
   }
   
-  let stocks = ["amzn", "dis", "amd", "spyd", "spwr"]
-
   return(
     <Layout page="index" title="" description="">
       {stockModal && 
         <div id="myModal" className="modal">
           <div className="modal-content">
             <span className="close" onClick={() => toggleStockModal(!stockModal)}>&times;</span>
-            <GetStock stockToFind={searchedStock} />
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Add</button>
+            <GetStock stockToFind={searchedStock} modal="true"/>
           </div>
         </div>
-        
       }
       <Search search={search} />
       <div className="flex flex-wrap ">
-        {stocks.map(stock => {
+        {props.stocks.map(stock => {
           return <GetStock stockToFind={stock} key={stock} />
         })}
       </div>
@@ -39,6 +35,12 @@ const App = props => {
 }
 
 export default App
+
+App.getInitialProps = async function() {
+  let res = await fetch('http://localhost:3001/api/stocks')
+  let data = await res.json();
+  return {stocks: data.map(stock => stock.stock)}
+}
 /*App.getInitialProps = async function() {
   let res = await fetch('https://sandbox.iexapis.com/stable/stock/WYNN/quote?token=Tpk_0e279c07400d4e8abbc68cf27ae41263&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap')
   //let res = await fetch('https://cloud.iexapis.com/stable/stock/AMD/quote?token=pk_715d9aa675fa4cc58576afda2e5b750a')
