@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require('express');
+const http = require("http");
 const next = require('next');
 const session = require("express-session");
 const passport = require("passport");
@@ -62,15 +63,13 @@ app
     };
 
     server.use("/profile", restrictAccess);
-    server.use("/share-thought", restrictAccess);
 
     server.get('*', (req, res) => {
       return handle(req, res);
     });
 
-    server.listen(3000, err => {
-      if (err) throw err;
-      console.log('> Ready on http://localhost:3000');
+    http.createServer(server).listen(process.env.PORT, () => {
+      console.log(`listening on port ${process.env.PORT}`);
     });
   })
   .catch(ex => {
