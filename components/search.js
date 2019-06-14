@@ -23,13 +23,13 @@ const Search = (props) => {
 
     return (
         <div className="flex justify-center">
-            <form className="search">
+            <form className="search top-0 mt-16">
                 <div className="search-icon">
-                    <FontAwesomeIcon icon={faSearch} />
+                    <FontAwesomeIcon icon={faSearch} color="black" />
                 </div>
-                <input placeholder="Search" value={searchValue} onChange={handleSearchInputChanges} type="text" className="py-2 px-4 pl-10 border border-blue-700 rounded-full outline-none" />
+                <input placeholder="Search" value={searchValue} onChange={handleSearchInputChanges} type="text" className="py-2 px-4 pl-10 border border-blue-700 rounded-full outline-none text-black" />
                 <div className="arrow-right" onClick={callSearchFunction}>
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <FontAwesomeIcon icon={faArrowRight} color="black" />
                 </div>
                 <input type="submit" className="hidden" onClick={callSearchFunction} />
             </form>

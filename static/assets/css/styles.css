@@ -1,6 +1,26 @@
 @tailwind base;
 @tailwind utilities;
 
+:root {
+    --green: #31a36e;
+    --red: #db1d1d;
+}
+
+.green {
+    color: var(--green);
+}
+.red {
+    color: var(--red);
+}
+button {
+    background-color: var(--green);
+}
+button:hover, button:focus {
+    background-color: #133213;
+}
+.stock-container {
+
+}
 .stock-image {
     max-width: 128px;
     height: 128px;
@@ -25,11 +45,11 @@
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
+    color: black;
 }
   
 /* The Close Button */
 .close {
-    color: #aaa;
     float: right;
     font-size: 64px;
     font-weight: bold;

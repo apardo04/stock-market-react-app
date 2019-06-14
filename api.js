@@ -1,6 +1,6 @@
 const pool = require('./data/config.js')
 const express = require('express')
-const server = express()
+const server = express.Router()
 
 server.get('/api/users', (req, res) => {
     pool.query("SELECT username, email FROM stock_app.user;", (err, rows, fields) => {
@@ -10,28 +10,23 @@ server.get('/api/users', (req, res) => {
 })
 
 server.get('/api/stocks', (req, res) => {
-    pool.query("SELECT stock FROM stock_app.userStocks WHERE userID=2;", (err, rows, fields) => {
+    pool.query(`SELECT stock FROM stock_app.userStocks WHERE userID='${req.query.userID}';`, (err, rows, fields) => {
         if (err) throw err
         res.send(rows)
     })
 })
 
-server.post('/api/stocks', (req, res) => {
-    //console.log(req.query.stock)
-    pool.query(`INSERT INTO stock_app.userStocks SET userID=${req.query.userID}, stock='${req.query.stock}', dateAdded=NOW();`, (error, result) => {
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) return next();
+    res.send(401);
+}
+
+server.post('/api/stocks', ensureAuthenticated, (req, res) => {
+    pool.query(`INSERT INTO stock_app.userStocks SET userID='${req.query.userID}', stock='${req.query.stock}', dateAdded=NOW();`, (error, result) => {
         if (error) throw error;
         res.status(201).send(`Stock added`);
     })
 })
 
-server.get('*', (req, res) => {
-    return "Welcome to my API";
-})
-
-const port = process.env.PORT || 3001
-server.listen(port, err => {
-    if (err) throw err;
-    console.log(`> Listening on port ${port}`);
-});
-
+module.exports = server;
   

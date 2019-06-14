@@ -1,59 +1,51 @@
-import React from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 
-const links = [
-  { href: 'https://github.com/segmentio/create-next-app', label: 'Github' }
-].map(link => {
-  link.key = `nav-link-${link.href}-${link.label}`
-  return link
-})
-
-const Nav = () => (
-  <nav>
-    <ul>
-      <li>
-        <Link prefetch href="/">
-          <a>Home</a>
-        </Link>
-      </li>
+export default function Nav({ user }) {
+  const [signInModal, toggleSignInModal] = useState(false)
+  return(
+    <nav>
       <ul>
-        {links.map(({ key, href, label }) => (
-          <li key={key}>
-            <Link href={href}>
-              <a>{label}</a>
+        <li className="lg:w-40 md:w-24">
+          <a href="/"><img src="/static/assets/images/logo.png"></img></a>
+        </li>
+        <li className="logo-text green text-6xl leading-none sm:hidden">Stock Portfolio</li>
+        <li>
+          {user && (
+            <>
+              <Link href="/logout">
+                <a className="hover:underline hover:cursor-pointer green">Log Out</a>
+              </Link>
+            </>
+          )}
+          {!user && (
+            <Link href="/login">
+              <a className="hover:underline hover:cursor-pointer green">Log In | Register</a>
             </Link>
-          </li>
-        ))}
+          )}
+        </li>
       </ul>
-    </ul>
 
-    <style jsx>{`
-      :global(body) {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, Avenir Next, Avenir,
-          Helvetica, sans-serif;
-      }
-      nav {
-        text-align: center;
-      }
-      ul {
-        display: flex;
-        justify-content: space-between;
-      }
-      nav > ul {
-        padding: 4px 16px;
-      }
-      li {
-        display: flex;
-        padding: 6px 8px;
-      }
-      a {
-        color: #067df7;
-        text-decoration: none;
-        font-size: 13px;
-      }
-    `}</style>
-  </nav>
-)
+      <style jsx>{`
+        nav {
+          text-align: center;
+        }
+        ul {
+          display: flex;
+          justify-content: space-between;
+        }
+        nav > ul {
+          padding: 4px 16px;
+        }
+        li {
+          display: flex;
+          padding: 6px 8px;
+        }
+        .logo-text{
+          font-family: 'Cinzel', serif;
+        }
+      `}</style>
+    </nav>
+  )
+}
 
-export default Nav

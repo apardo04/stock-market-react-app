@@ -12,13 +12,20 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "@zeit/next-css": "^1.0.1",
     "axios": "^0.19.0",
+    "body-parser": "^1.19.0",
     "cross-env": "^5.2.0",
+    "dotenv": "^8.0.0",
+    "dotenv-webpack": "^1.7.0",
     "express": "^4.17.1",
+    "express-session": "^1.16.2",
     "isomorphic-unfetch": "^3.0.0",
     "mysql": "^2.17.1",
     "next": "8.1.0",
+    "passport": "^0.4.0",
+    "passport-auth0": "^1.1.0",
     "react": "16.8.6",
-    "react-dom": "16.8.6"
+    "react-dom": "16.8.6",
+    "uid-safe": "^2.1.5"
   },
   "devDependencies": {
     "autoprefixer": "^9.6.0",

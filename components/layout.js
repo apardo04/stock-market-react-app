@@ -11,9 +11,7 @@ const Layout = props => {
     return (
         <React.Fragment>
             <Head page={props.page} title={props.title} description={props.description} />
-            <Nav page={props.page} />
             {props.children}
-         
         </React.Fragment>
     )
 }
