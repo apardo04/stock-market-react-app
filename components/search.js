@@ -27,7 +27,7 @@ const Search = (props) => {
                 <div className="search-icon">
                     <FontAwesomeIcon icon={faSearch} color="black" />
                 </div>
-                <input placeholder="Search" value={searchValue} onChange={handleSearchInputChanges} type="text" className="py-2 px-4 pl-10 border border-blue-700 rounded-full outline-none text-black" />
+                <input placeholder="Search Ticker" value={searchValue} onChange={handleSearchInputChanges} type="text" className="pl-10 py-2 pr-4 border border-blue-700 rounded-full outline-none text-black" />
                 <div className="arrow-right" onClick={callSearchFunction}>
                     <FontAwesomeIcon icon={faArrowRight} color="black" />
                 </div>

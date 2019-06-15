@@ -4,6 +4,7 @@
 :root {
     --green: #31a36e;
     --red: #db1d1d;
+    --yellow: #e3c322;
 }
 
 .green {
@@ -11,6 +12,9 @@
 }
 .red {
     color: var(--red);
+}
+.yellow {
+    color: var(--yellow);
 }
 button {
     background-color: var(--green);

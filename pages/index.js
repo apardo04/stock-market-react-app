@@ -52,7 +52,7 @@ const App = (props) => {
         <div id="myModal" className="modal">
           <div className="modal-content">
             <span className="close green" onClick={() => toggleStockModal(false)}>&times;</span>
-            <GetStock stockToFind={searchedStock} modal="true" user={props.user} getUserStocks={getUserStocks}/>
+            <GetStock stockToFind={searchedStock} modal="true" user={props.user} getUserStocks={getUserStocks} />
           </div>
         </div>
       }
@@ -66,13 +66,13 @@ const App = (props) => {
         props.user ?
         <div className="flex flex-wrap">
           {userStocks.map(stock => {
-            return <GetStock stockToFind={stock} key={stock} />
+            return <GetStock stockToFind={stock} key={stock} portfolio="true" user={props.user} getUserStocks={getUserStocks} />
           })}
         </div>
         :
         <div className="flex flex-wrap justify-center">
           <Link href="/login">
-            <a className="hover:underline hover:cursor-pointer green">Log In or Register to create a portfolio</a>
+            <a className="mt-2 hover:underline hover:cursor-pointer green">Log In or Register to create a portfolio</a>
           </Link>
         </div>
       }
