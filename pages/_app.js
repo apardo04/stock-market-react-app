@@ -8,8 +8,12 @@ class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
-    if (ctx.req && ctx.req.session.passport) {
-      pageProps.user = ctx.req.session.passport.user;
+    try{
+      if (ctx.req && ctx.req.session && ctx.req.session.passport) {
+        pageProps.user = ctx.req.session.passport.user;
+      }
+    } catch(error) {
+      console.log(error + " = error from _app get initial props")
     }
     return { pageProps };
   }
@@ -20,7 +24,9 @@ class MyApp extends App {
       user: props.pageProps.user
     };
   }
+  async componentDidMount() {
 
+  }
   render() {
     const { Component, pageProps } = this.props;
 

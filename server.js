@@ -61,12 +61,11 @@ app
       if (!req.isAuthenticated()) return res.redirect("/login");
       next();
     };
-
+    
     server.use("/profile", restrictAccess);
 
-    server.get('*', (req, res) => {
-      return handle(req, res);
-    });
+    // handling everything else with Next.js
+    server.get("*", handle);
 
     http.createServer(server).listen(process.env.PORT, () => {
       console.log(`listening on port ${process.env.PORT}`);
