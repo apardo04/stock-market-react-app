@@ -24,7 +24,7 @@ const App = (props) => {
 
     let dataArr = []
     Axios
-    .get(`http://localhost:3000/api/stocks?userID=${props.user.id}`)
+    .get(`http://127.0.0.1:3000/api/stocks?userID=${props.user.id}`)
     .then(res => {
       res.data.map(stock => {
         dataArr.push(stock.stock)
