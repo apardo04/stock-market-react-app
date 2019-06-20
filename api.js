@@ -1,5 +1,7 @@
 const pool = require('./data/config.js')
 const express = require('express')
+const { getTokenForBrowser, getTokenForServer } = require('./static/auth');
+//const auth = require('./static/auth.js')
 const server = express.Router()
 
 server.use(function (req, res, next) {
@@ -9,19 +11,29 @@ server.use(function (req, res, next) {
     next();
 });
 
+// original authenticator
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) return next();
     res.sendStatus(401);
 }
 
-server.get('/api/stocks', ensureAuthenticated, (req, res) => {
+// not working
+async function ensureAuthenticated2(req, res, next) {
+    const token = await getTokenForServer(req);
+    console.log("token api res = " + token)
+    if (token != undefined)
+        return next();
+    res.sendStatus(401);
+}
+
+server.get('/api/stocks', (req, res) => {
     pool.query(`SELECT stock FROM stock_app.userStocks WHERE userID='${req.query.userID}';`, (err, rows, fields) => {
         if (err) throw err
         res.send(rows)
     })
 })
 
-server.post('/api/stocks', ensureAuthenticated, (req, res) => {
+server.post('/api/stocks', (req, res) => {
     pool.query(`INSERT INTO stock_app.userStocks SET userID='${req.query.userID}', stock='${req.query.stock}', dateAdded=NOW();`, (error, result) => {
         if (error) {
             if(error.code == 'ER_DUP_ENTRY' || error.errno == 1062) {
@@ -37,7 +49,7 @@ server.post('/api/stocks', ensureAuthenticated, (req, res) => {
     })
 })
 
-server.delete('/api/stocks', ensureAuthenticated, (req, res) => {
+server.delete('/api/stocks', (req, res) => {
     pool.query(`DELETE FROM stock_app.userStocks WHERE userID='${req.query.userID}' AND stock='${req.query.stock}';`, (error, result) => {
         if (error) throw error;
         res.status(200).send(`Stock deleted`);

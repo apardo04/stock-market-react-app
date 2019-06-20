@@ -1,12 +1,15 @@
 import {useState, useEffect} from 'react'
-import Layout from '../components/layout'
 import GetStock from '../components/getStock';
 import Search from  '../components/search'
 import Axios from 'axios';
 import Link from 'next/link'
+import PropTypes from 'prop-types';
+import { getToken } from '../static/auth';
+import template from '../components/template';
+import SecureTemplate from '../static/secure-template'
 import '../static/assets/css/styles.css'
 
-const App = (props) => {
+const Index = ({ isLoggedIn, loggedInUser }) => {
   const [stockModal, toggleStockModal] = useState(false)
   const [searchedStock, setSearchedStock] = useState("")
   const [userStocks, setUserStocks] = useState([])
@@ -24,7 +27,7 @@ const App = (props) => {
 
     let dataArr = []
     Axios
-    .get(`http://127.0.0.1:3000/api/stocks?userID=${props.user.id}`)
+    .get(`${process.env.BASE_URL}/api/stocks?userID=${loggedInUser.sub}`)
     .then(res => {
       res.data.map(stock => {
         dataArr.push(stock.stock)
@@ -42,17 +45,17 @@ const App = (props) => {
   }
 
   useEffect(() => { 
-    if (props.user) 
+    if (isLoggedIn) 
       getUserStocks()
   }, [])
   
   return(
-    <Layout page="index" title="" description="">
+    <React.Fragment>
       {stockModal && 
         <div id="myModal" className="modal">
           <div className="modal-content">
             <span className="close green" onClick={() => toggleStockModal(false)}>&times;</span>
-            <GetStock stockToFind={searchedStock} modal="true" user={props.user} getUserStocks={getUserStocks} />
+            <GetStock stockToFind={searchedStock} modal="true" user={loggedInUser} getUserStocks={getUserStocks} />
           </div>
         </div>
       }
@@ -61,12 +64,13 @@ const App = (props) => {
         (<span>loading...</span>) 
       : 
         errorMessage ?
-        <div>Error</div>
+        <div>error{errorMessage}
+         {JSON.stringify(loggedInUser, null, 2)}</div>
       :
-        props.user ?
+        isLoggedIn ?
         <div className="flex flex-wrap">
           {userStocks.map(stock => {
-            return <GetStock stockToFind={stock} key={stock} portfolio="true" user={props.user} getUserStocks={getUserStocks} />
+            return <GetStock stockToFind={stock} key={stock} portfolio="true" user={loggedInUser} getUserStocks={getUserStocks} />
           })}
         </div>
         :
@@ -76,61 +80,13 @@ const App = (props) => {
           </Link>
         </div>
       }
-    </Layout>
+    </React.Fragment>
   )
 }
 
-export default App
+Index.propTypes = {
+  isLoggedIn: PropTypes.bool,
+  loggedInUser: PropTypes.object
+}
 
-/*App.getInitialProps = async function() {
-  let res = await fetch('https://sandbox.iexapis.com/stable/stock/WYNN/quote?token=Tpk_0e279c07400d4e8abbc68cf27ae41263&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap')
-  //let res = await fetch('https://cloud.iexapis.com/stable/stock/AMD/quote?token=pk_715d9aa675fa4cc58576afda2e5b750a')
-  //Miav
-  //https://cloud.iexapis.com/stable/stock/amd/company?token=pk_715d9aa675fa4cc58576afda2e5b750a
-  let data = await res.json();
-  let redOrGreen = (data.changePercent.toString()[0] == '-') ? "red" : "green"
-  let stock = Object.entries(data).map(([key, value]) => 
-    <li>{key + ": " +  value}</li>
-  )
-  console.log("data retrieved")
-  return {*/
-
-/* Alphavantage
-App.getInitialProps = async function() {
-  let api_keys = ["55VF2MOP6F6OFKHJ", "T4K6YGUEA62XZGU3", "6PF9DO06RM7LAL8Y", "PCXJR3QWEIBN61CQ", "9J20D9U00QNE2SBC"]
-
-  let res = await fetch('https://www.alphavantage.co/query?function=SECTOR&apikey=6PF9DO06RM7LAL8Y');
-  let data = await res.json();
-  let sectorList = <li>Fuck alphavantage</li>
-
-  if (Object.keys(data)[0] != "Note") {
-    sectorList = Object.entries(data["Rank B: 1 Day Performance"]).map(([key, value]) => 
-        <li>{key + ": " +  value}</li>
-    )
-  }
-
-  res = await fetch('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=amd&apikey=55VF2MOP6F6OFKHJ');
-  data = await res.json();
-  let stockData2 = <li>Fuck alphavantage</li>
-
-  if (Object.keys(data)[0] != "Note") {
-
-    const stockData = {"Symbol": data["Global Quote"]["01. symbol"], 
-                        "Price": data["Global Quote"]["05. price"], 
-                        "Change": data["Global Quote"]["09. change"],
-                        "Change Percent": data["Global Quote"]["10. change percent"]
-                      }
-    
-    stockData2 = Object.entries(stockData).map(([key, value]) => 
-        <li className="red">{key + ": " +  value}</li>
-    )
-  }
-
-  return {
-    sectorList, stockData2
-  };
-
-
-
-};
-*/
+export default template(Index);

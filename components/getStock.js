@@ -33,7 +33,7 @@ const GetStock = (props) => {
   }
 
   const addToPortfolio = () => {
-    Axios.post(`http://127.0.0.1:3000/api/stocks?userID=${props.user.id}&stock=${stock.symbol}`, () => {})
+    Axios.post(`${process.env.BASE_URL}/api/stocks?userID=${props.user.sub}&stock=${stock.symbol}`, () => {})
     .then(function (res) {
       console.log(res);
       props.getUserStocks()
@@ -45,7 +45,7 @@ const GetStock = (props) => {
   }
 
   const deleteFromPortfolio = symbol => {
-    Axios.delete(`http://127.0.0.1:3000/api/stocks?userID=${props.user.id}&stock=${symbol}`, () => {})
+    Axios.delete(`${process.env.BASE_URL}/api/stocks?userID=${props.user.sub}&stock=${symbol}`, () => {})
     .then(function (res) {
       console.log(res);
       props.getUserStocks()

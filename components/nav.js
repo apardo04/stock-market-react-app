@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import PropTypes from 'prop-types';
 
-export default function Nav({ user }) {
+export default function Nav({ isLoggedIn }) {
   const [signInModal, toggleSignInModal] = useState(false)
   return(
     <nav>
@@ -11,14 +12,14 @@ export default function Nav({ user }) {
         </li>
         <li className="logo-text green text-6xl leading-none sm:hidden">Stock Portfolio</li>
         <li>
-          {user && (
+          {isLoggedIn && (
             <>
               <Link href="/logout">
                 <a className="hover:underline hover:cursor-pointer green">Log Out</a>
               </Link>
             </>
           )}
-          {!user && (
+          {!isLoggedIn && (
             <Link href="/login">
               <a className="hover:underline hover:cursor-pointer green">Log In | Register</a>
             </Link>
@@ -49,3 +50,6 @@ export default function Nav({ user }) {
   )
 }
 
+Nav.propTypes = {
+  isLoggedIn: PropTypes.bool
+};

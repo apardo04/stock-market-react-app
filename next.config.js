@@ -2,7 +2,10 @@ require("dotenv").config();
 const path = require("path");
 const Dotenv = require("dotenv-webpack");
 
-module.exports = {
+const withCSS = require('@zeit/next-css');
+
+
+module.exports = withCSS({
   webpack: config => {
     // Fixes npm packages that depend on `fs` module
     config.node = {
@@ -23,8 +26,5 @@ module.exports = {
 
     return config
   }
-}
+})
 
-const withCSS = require('@zeit/next-css');
-
-module.exports = withCSS();
