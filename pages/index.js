@@ -4,7 +4,6 @@ import Search from  '../components/search'
 import Axios from 'axios';
 import Link from 'next/link'
 import PropTypes from 'prop-types';
-import { getToken } from '../static/auth';
 import template from '../components/template';
 import SecureTemplate from '../static/secure-template'
 import '../static/assets/css/styles.css'
