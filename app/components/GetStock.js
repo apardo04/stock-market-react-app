@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import Axios from 'axios';
-import Stock from './stock'
+import Stock from './Stock'
 
 const GetStock = (props) => {
   const [stock, setStock] = useState([])

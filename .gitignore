@@ -1,21 +1,5 @@
-# See https://help.github.com/ignore-files/ for more about ignoring files.
+node_modules
 
-# dependencies
-/node_modules
+app/.next/
 
-# testing
-/coverage
-
-# production
-/build
-/dist
-/.next
-
-# misc
-.DS_Store
-.env
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-/data
+server/db.config.js

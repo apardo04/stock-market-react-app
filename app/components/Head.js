@@ -38,8 +38,6 @@ const Head = props => (
       :global(body) {
         margin: 0;
         font-family: Avenir, Helvetica, sans-serif;
-        background: black;
-        color: white;
       }
     `}</style>
   </React.Fragment>
