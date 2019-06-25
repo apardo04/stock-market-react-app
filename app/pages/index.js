@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+import Axios from 'axios';
 import Page from '../layouts/page';
-import { Row, Modal, Button } from 'antd';
+import { Row, Col, Modal, Button } from 'antd';
 import AuthenticationForm from '../components/AuthenticationForm'
 import SearchForm from  '../components/SearchForm'
 import GetStock from '../components/GetStock';
+import jwt from 'jwt-simple';
 
 export const LOGIN = "login";
 export const REGISTER = "register";
@@ -17,8 +19,15 @@ const Index = props => {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
 
-    function logIn() {
+
+    function logIn(id) {
         setLoggedIn(true);
+        getUserStocks(id)
+    }
+
+    function logOut() {
+        localStorage.clear();
+        setLoggedIn(false);
     }
 
     const search = searchValue => {
@@ -26,13 +35,13 @@ const Index = props => {
         toggleStockModal(true)
     }
 
-    const getUserStocks = () => {
+    const getUserStocks = id => {
         setLoading(true);    
         setErrorMessage(null);
     
         let dataArr = []
         Axios
-        .get(`localhost:3000/api/stocks?userID=${loggedInUser.sub}`)
+        .get(`http://localhost:3000/api/stocks?userID=${id}`)
         .then(res => {
           res.data.map(stock => {
             dataArr.push(stock.stock)
@@ -47,30 +56,44 @@ const Index = props => {
           setLoading(false);
           }
         })
-      }
-    
-      useEffect(() => { 
-        if (loggedIn) 
-          getUserStocks()
-      }, [])
+    }
+
+    useEffect(() => {
+    let userID = localStorage.getItem("userID")
+    let token = localStorage.getItem("stockAppToken");
+    if (token && userID) {
+        let authenticated = jwt.decode(token, process.env.JWT_SECRET);
+        if (authenticated) {
+            setLoggedIn(true);
+            getUserStocks(userID);
+        }
+    }
+    }, [])
 
     return(
         <Page>
             <Row type="flex" justify="center">        
                 <Modal
                     visible={stockModal}
-                    title="Title"                        
+                    title={searchedStock}                
                     onCancel={() => toggleStockModal(false)}
                     footer={[
                     <Button key="back" onClick={() => toggleStockModal(false)}>
                         Return
                     </Button>
                     ]}
-                />
+                >
+                    <GetStock stockToFind={searchedStock} modal="true" user={loggedIn} getUserStocks={getUserStocks} />
+                </Modal>
                 <SearchForm search={search} />
             </Row>
                 { loggedIn ?
-                    <></>
+                    <>
+                        <Row type="flex" justify="center"><a onClick={logOut}>Log Out</a></Row>
+                        {userStocks.map((stock, index) => {
+                            return <GetStock stockToFind={stock} key={stock} portfolio="true" loggedIn={loggedIn} getUserStocks={getUserStocks} />
+                        })}
+                    </>
                 :   
                     !registerForm ?
                     <>
@@ -87,40 +110,8 @@ const Index = props => {
                         </Row>
                 }
             <style jsx global>{`
-                .modal {
-                    display: flex; /* Hidden by default */
-                    position: fixed; /* Stay in place */
-                    z-index: 1; /* Sit on top */
-                    left: 0;
-                    top: 0;
-                    width: 100%; /* Full width */
-                    height: 100%; /* Full height */
-                    overflow: auto; /* Enable scroll if needed */
-                    background-color: rgb(0,0,0); /* Fallback color */
-                    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-                }
-                
-                /* Modal Content/Box */
-                .modal-content {
-                    background-color: #fefefe;
-                    margin: 15% auto;
-                    padding: 20px;
-                    border: 1px solid #888;
-                    color: black;
-                }
-                
-                /* The Close Button */
-                .close {
-                    float: right;
-                    font-size: 64px;
-                    font-weight: bold;
-                }
-                
-                .close:hover,
-                .close:focus {
-                    color: black;
-                    text-decoration: none;
-                    cursor: pointer;
+                .red {
+                    color: #f5222d;
                 }
             `}</style>
         </Page>

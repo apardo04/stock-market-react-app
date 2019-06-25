@@ -16,6 +16,7 @@ class AppRouter {
     buildRoutes() {
         this.router.post("/signup", AuthController.signup);
         this.router.post("/signin", requireSignIn, AuthController.signin);
+        this.router.get("/api/stocks", AuthController.getStocks)
     }
 }
 

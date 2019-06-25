@@ -72,15 +72,15 @@ const GetStock = (props) => {
           </div>
         </div>
       :
-        <div className="stock-container ml-6 rounded-lg lg:mb-10 lg:mr-10 xs:p-1 lg:p-6">
+        <>
           <Stock data={stock} color={color} />
-          {props.portfolio && props.user && 
+          {props.portfolio && props.loggedIn && 
             <button onClick={() => deleteFromPortfolio(stock.symbol)} className="text-white font-bold py-1 px-2 mt-3 ml-5 border border-white rounded content-center">Remove From Portfolio</button>
           } 
-          {props.modal && props.user &&
+          {props.modal && props.loggedIn &&
             <button onClick={addToPortfolio} className="text-white font-bold py-2 px-4 mt-3 border border-black rounded content-center">Add To Portfolio</button>
           }
-        </div>
+        </>
       }      
     </React.Fragment>
   )

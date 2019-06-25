@@ -1,7 +1,5 @@
 import React, { useState } from "react"
 import { Form, Input, Row } from 'antd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 const { Search } = Input;
 

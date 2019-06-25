@@ -52,10 +52,10 @@ class AuthenticationForm extends Component {
             }).then(data => {
                 if (this.vManager.name == "Login" && data.token) {
                     localStorage.setItem("stockAppToken", data.token);
+                    localStorage.setItem("userID", data.userID);
                     this.setState({ success: true });
-                    this.props.logIn()
+                    this.props.logIn(data.userID);
                 }
-                
             }).catch(err => {
                 if (err) this.setState({ error: true })
             }) 
@@ -67,7 +67,7 @@ class AuthenticationForm extends Component {
         return (
             <Form layout="inline" onSubmit={this.handleSubmit}>
                 { /* Move into Flash Message Component */ }
-                { this.state.error && <p>{ this.vManager.errorMsg }</p> }
+                { this.state.error && <p className="red">{ this.vManager.errorMsg }</p> }
                 { this.state.success && (
                     <p>{ this.vManager.name } Successful.</p>
                 )}

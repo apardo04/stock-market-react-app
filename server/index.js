@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require('express');
 const session = require('express-session');
 const uuid = require('uuid');
@@ -6,7 +7,7 @@ const { parse } = require('url');
 const next = require('next');
 const AppRouter = require('./routes/AppRouter');
 
-const dev =  process.env.NODE_ENV || "development";
+const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 3000;
 
 const app = next({ dir: "./app", dev });

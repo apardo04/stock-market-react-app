@@ -16,7 +16,7 @@ const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
             bcrypt.compare(password, user[0].password, (err, isMatch) => {
                 if(err) return done(err);
                 if(!isMatch) return done(null, false);
-                return done(null, user);
+                return done(null, user[0]);
             });
         }
         else {
@@ -27,12 +27,12 @@ const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
 
 const jwtOptions = {
     jwtFromRequest: ExtractJwt.fromHeader("authorization"),
-    secretOrKey: "yourJWTsecret"
+    secretOrKey: process.env.JWT_SECRET
 };
 
 const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
     console.log("payload.sub = " + payload.sub)
-    pool.query(`SELECT * FROM stock_app.user WHERE UserID="${payload.sub}";`, (err, user, fields) => {
+    pool.query(`SELECT * FROM stock_app.user WHERE userID="${payload.sub}";`, (err, user, fields) => {
         if (user === null) {
             done(null, false);
         }

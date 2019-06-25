@@ -1,7 +1,9 @@
+require('dotenv').config()
+const path = require('path')
+const Dotenv = require('dotenv-webpack')
 const withLess = require('@zeit/next-less');
 const lessToJs = require('less-vars-to-js');
 const fs = require('fs');
-const path = require('path');
 
 // Where the antd.custom.less varaiables lives
 const themeVariables = lessToJs(
@@ -20,5 +22,25 @@ module.exports = withLess({
     lessLoaderOptions:  {
         javascriptEnabled: true,
         modifyVars: themeVariables
-    }
+    },
+    webpack: config => {
+        // Fixes npm packages that depend on `fs` module
+        config.node = {
+          fs: 'empty'
+        }
+        
+        config.plugins = config.plugins || [];
+    
+        config.plugins = [
+          ...config.plugins,
+    
+          // Read the .env file
+          new Dotenv({
+            path: path.join(__dirname, ".env"),
+            systemvars: true
+          })
+        ];
+    
+        return config
+      }
 })
