@@ -1,6 +1,7 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect} from 'react';
+import { Button } from 'antd';
 import Axios from 'axios';
-import Stock from './Stock'
+import Stock from './Stock';
 
 const GetStock = (props) => {
   const [stock, setStock] = useState([])
@@ -33,10 +34,10 @@ const GetStock = (props) => {
   }
 
   const addToPortfolio = () => {
-    Axios.post(`${process.env.BASE_URL}/api/stocks?userID=${props.user.sub}&stock=${stock.symbol}`, () => {})
+    Axios.post(`${process.env.BASE_URL}/api/stocks?userID=${props.id}&stock=${stock.symbol}`, () => {})
     .then(function (res) {
       console.log(res);
-      props.getUserStocks()
+      props.getUserStocks(props.id)
     })
     .catch(function (error) {
       console.log(error);
@@ -45,10 +46,10 @@ const GetStock = (props) => {
   }
 
   const deleteFromPortfolio = symbol => {
-    Axios.delete(`${process.env.BASE_URL}/api/stocks?userID=${props.user.sub}&stock=${symbol}`, () => {})
+    Axios.delete(`${process.env.BASE_URL}/api/stocks?userID=${props.id}&stock=${symbol}`, () => {})
     .then(function (res) {
       console.log(res);
-      props.getUserStocks()
+      props.getUserStocks(props.id)
     })
     .catch(function (error) {
       console.log(error);
@@ -72,16 +73,40 @@ const GetStock = (props) => {
           </div>
         </div>
       :
-        <>
-          <Stock data={stock} color={color} />
-          {props.portfolio && props.loggedIn && 
-            <button onClick={() => deleteFromPortfolio(stock.symbol)} className="text-white font-bold py-1 px-2 mt-3 ml-5 border border-white rounded content-center">Remove From Portfolio</button>
-          } 
-          {props.modal && props.loggedIn &&
-            <button onClick={addToPortfolio} className="text-white font-bold py-2 px-4 mt-3 border border-black rounded content-center">Add To Portfolio</button>
+        props.portfolio ?
+          <div className="col white">
+            <Stock data={stock} color={color} modal={props.modal}/>
+            <div className="btn-remove-container">
+              <Button type="primary" icon="delete" onClick={() => deleteFromPortfolio(stock.symbol)}>Remove From Portfolio</Button>
+            </div>
+          </div>
+      :
+          <div className="black">
+            <Stock data={stock} color={color} />
+            {props.loggedIn &&
+              <Button type="primary" onClick={addToPortfolio} className="">Add To Portfolio</Button>
+            }
+          </div>
+      }
+      <style jsx>{`
+          .col {
+            box-sizing: border-box;
+            width: 20%;
           }
-        </>
-      }      
+          .col:nth-child(odd) {
+            margin-right: 0.5rem
+          }
+          .col:nth-child(even) {
+            margin-left: 0.5rem;
+          }
+          .col:not(:nth-child(0)),
+          .col:not(:nth-child(0)) {
+            margin-top: 1rem;
+          }
+          .btn-remove-container {
+              margin-top: .75rem;
+          }
+      `}</style>
     </React.Fragment>
   )
 }

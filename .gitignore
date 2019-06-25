@@ -6,3 +6,5 @@ server/db.config.js
 
 .env
 .DS_Store
+
+notes.txt

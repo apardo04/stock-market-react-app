@@ -17,6 +17,8 @@ class AppRouter {
         this.router.post("/signup", AuthController.signup);
         this.router.post("/signin", requireSignIn, AuthController.signin);
         this.router.get("/api/stocks", AuthController.getStocks)
+        this.router.post("/api/stocks", AuthController.addStock)
+        this.router.delete("/api/stocks", AuthController.deleteStock)
     }
 }
 

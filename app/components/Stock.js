@@ -6,8 +6,8 @@ const Stock = props => {
                     <img onError={imageError} className="p-2" src={"https://storage.googleapis.com/iex/api/logos/" + props.data.symbol + ".png"} />
                 </div>*/}
                 <div className="mt-4 md:mt-0 md:ml-6">
-                    <span className="block mt-1 text-lg leading-tight font-semibold green">{props.data.symbol} | {props.data.companyName}</span>
-                    <ul className="mt-2 text-black-600">
+                    <span className="company-header green">{props.data.symbol} | {props.data.companyName}</span>
+                    <ul>
                         <li>Current Price: <span className={props.color}>${parseFloat(props.data.latestPrice).toFixed(2).toLocaleString()}</span></li>
                         <li>Change: <span className={props.color}>${parseFloat(props.data.change).toFixed(2)}</span></li>
                         <li>Change Percent: <span className={props.color}>{(props.data.changePercent * 100).toFixed(2)}%</span></li>
@@ -17,6 +17,23 @@ const Stock = props => {
                         <li>Market Cap: <span>{parseFloat(props.data.marketCap).toLocaleString()}</span></li>
                     </ul>
                 </div>
+                <style jsx>{`
+                    .company-header {
+                        display: block;
+                        line-height: 1.25;
+                        margin-top: 0.25rem;
+                        margin-bottom: 0.25rem;
+                        font-size: 1.125rem;
+                        font-weight: 600;
+                    }
+                    ul {
+                        font-size: 1rem;
+                        list-style: none;
+                        line-height: 1.5;
+                        margin: 0;
+                        padding: 0;
+                    }
+                `}</style>
         </React.Fragment>
     )
 }

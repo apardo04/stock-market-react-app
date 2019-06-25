@@ -13,6 +13,7 @@ export const REGISTER = "register";
 const Index = props => {
     const [registerForm, setRegisterForm] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
+    const [userID, setUserID] = useState(null);
     const [stockModal, toggleStockModal] = useState(false)
     const [searchedStock, setSearchedStock] = useState("");
     const [userStocks, setUserStocks] = useState([]);
@@ -41,7 +42,7 @@ const Index = props => {
     
         let dataArr = []
         Axios
-        .get(`http://localhost:3000/api/stocks?userID=${id}`)
+        .get(`${process.env.BASE_URL}/api/stocks?userID=${id}`)
         .then(res => {
           res.data.map(stock => {
             dataArr.push(stock.stock)
@@ -66,6 +67,7 @@ const Index = props => {
         if (authenticated) {
             setLoggedIn(true);
             getUserStocks(userID);
+            setUserID(userID);
         }
     }
     }, [])
@@ -83,35 +85,53 @@ const Index = props => {
                     </Button>
                     ]}
                 >
-                    <GetStock stockToFind={searchedStock} modal="true" user={loggedIn} getUserStocks={getUserStocks} />
+                    <GetStock stockToFind={searchedStock} id={userID} loggedIn={loggedIn} getUserStocks={getUserStocks} />
                 </Modal>
                 <SearchForm search={search} />
             </Row>
                 { loggedIn ?
                     <>
                         <Row type="flex" justify="center"><a onClick={logOut}>Log Out</a></Row>
-                        {userStocks.map((stock, index) => {
-                            return <GetStock stockToFind={stock} key={stock} portfolio="true" loggedIn={loggedIn} getUserStocks={getUserStocks} />
-                        })}
+                        <Row type="flex" justify="center">
+                            {userStocks.map((stock, index) => {
+                                return <GetStock stockToFind={stock} id={userID} portfolio={loggedIn} getUserStocks={getUserStocks} key={stock} />
+                            })}
+                        </Row>
                     </>
                 :   
                     !registerForm ?
-                    <>
+                        <>
+                            <Row type="flex" justify="center">Login or Register to create a portfolio</Row>
+                            <Row type="flex" justify="center">
+                                <div className="center"><AuthenticationForm view={LOGIN} logIn={logIn}/></div>
+                            </Row>
+                            <Row type="flex" justify="center">
+                                <a onClick={() => setRegisterForm(true)}>Click Here to Sign Up</a>
+                            </Row>
+                        </>
+                    :
                         <Row type="flex" justify="center">
-                            <AuthenticationForm view={LOGIN} logIn={logIn}/>
-                        </Row>
-                        <Row type="flex" justify="center">
-                            <a onClick={() => setRegisterForm(true)}>Or Register Now</a>
-                        </Row>
-                    </>
-                :
-                        <Row type="flex" justify="center">
-                            <AuthenticationForm view={REGISTER} />
+                            <div className="center"><AuthenticationForm view={REGISTER} /></div>
                         </Row>
                 }
             <style jsx global>{`
+                body {
+                    font-family: Avenir,Helvetica,sans-serif;
+                }
+                .green {
+                    color: #31a36e;
+                }
                 .red {
                     color: #f5222d;
+                }
+                .white {
+                    color: white;
+                }
+                .black {
+                    color: black;
+                }
+                .center {
+                    text-align:center;
                 }
             `}</style>
         </Page>

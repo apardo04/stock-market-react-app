@@ -38,7 +38,29 @@ class AuthController {
         pool.query(`SELECT stock FROM stock_app.userStocks WHERE userID='${req.query.userID}';`, (err, rows, fields) => {
             if (err) throw err
             res.send(rows)
-            console.log(rows)
+        })
+    }
+
+    addStock(req, res, next) {
+        pool.query(`INSERT INTO stock_app.userStocks SET userID='${req.query.userID}', stock='${req.query.stock}', dateAdded=NOW();`, (error, result) => {
+            if (error) {
+                if(error.code == 'ER_DUP_ENTRY' || error.errno == 1062) {
+                    res.status(404).send("Stock is already in your portfolio")
+                }
+                else {
+                    throw error
+                }
+            }
+            else {
+                res.status(201).send(`Stock added`);
+            }
+        })
+    }
+
+    deleteStock(req, res, next) {
+        pool.query(`DELETE FROM stock_app.userStocks WHERE userID='${req.query.userID}' AND stock='${req.query.stock}';`, (error, result) => {
+            if (error) throw error;
+            res.status(200).send(`Stock deleted`);
         })
     }
 }

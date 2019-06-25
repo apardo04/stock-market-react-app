@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { Layout } from 'antd';
 import Head from '../components/Head'
 import Nav from '../components/Nav'
 
