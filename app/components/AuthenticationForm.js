@@ -56,6 +56,9 @@ class AuthenticationForm extends Component {
                     this.setState({ success: true });
                     this.props.logIn(data.userID);
                 }
+                else if (this.vManager.name == "Register") {
+                    window.location.reload();
+                }
             }).catch(err => {
                 if (err) this.setState({ error: true })
             }) 

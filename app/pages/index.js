@@ -75,18 +75,14 @@ const Index = props => {
     return(
         <Page>
             <Row type="flex" justify="center">        
-                <Modal
-                    visible={stockModal}
-                    title={searchedStock}                
-                    onCancel={() => toggleStockModal(false)}
-                    footer={[
-                    <Button key="back" onClick={() => toggleStockModal(false)}>
-                        Return
-                    </Button>
-                    ]}
-                >
-                    <GetStock stockToFind={searchedStock} id={userID} loggedIn={loggedIn} getUserStocks={getUserStocks} />
-                </Modal>
+                {stockModal && 
+                    <div id="myModal" className="modal">
+                    <div className="modal-content">
+                        <span className="close green" onClick={() => toggleStockModal(false)}>&times;</span>
+                        <GetStock stockToFind={searchedStock} modal="true" id={userID} loggedIn={loggedIn} getUserStocks={getUserStocks} />
+                    </div>
+                    </div>
+                }
                 <SearchForm search={search} />
             </Row>
                 { loggedIn ?
@@ -100,16 +96,16 @@ const Index = props => {
                     </>
                 :   
                     !registerForm ?
-                        <>
-                            <Row type="flex" justify="center">Login or Register to create a portfolio</Row>
-                            <Row type="flex" justify="center">
-                                <div className="center"><AuthenticationForm view={LOGIN} logIn={logIn}/></div>
-                            </Row>
-                            <Row type="flex" justify="center">
-                                <a onClick={() => setRegisterForm(true)}>Click Here to Sign Up</a>
-                            </Row>
-                        </>
-                    :
+                    <>
+                        <Row type="flex" justify="center">Login or Register to create a portfolio</Row>
+                        <Row type="flex" justify="center">
+                            <div className="center"><AuthenticationForm view={LOGIN} logIn={logIn}/></div>
+                        </Row>
+                        <Row type="flex" justify="center">
+                            <a onClick={() => setRegisterForm(true)}>Click Here to Sign Up</a>
+                        </Row>
+                    </>
+                :
                         <Row type="flex" justify="center">
                             <div className="center"><AuthenticationForm view={REGISTER} /></div>
                         </Row>
@@ -132,6 +128,41 @@ const Index = props => {
                 }
                 .center {
                     text-align:center;
+                }
+                .modal {
+                    display: flex; /* Hidden by default */
+                    position: fixed; /* Stay in place */
+                    z-index: 1; /* Sit on top */
+                    left: 0;
+                    top: 0;
+                    width: 100%; /* Full width */
+                    height: 100%; /* Full height */
+                    overflow: auto; /* Enable scroll if needed */
+                    background-color: rgb(0,0,0); /* Fallback color */
+                    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+                }
+                
+                /* Modal Content/Box */
+                .modal-content {
+                    background-color: #fefefe;
+                    margin: 15% auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    color: black;
+                }
+                
+                /* The Close Button */
+                .close {
+                    float: right;
+                    font-size: 64px;
+                    font-weight: bold;
+                }
+                
+                .close:hover,
+                .close:focus {
+                    color: black;
+                    text-decoration: none;
+                    cursor: pointer;
                 }
             `}</style>
         </Page>
