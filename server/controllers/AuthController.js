@@ -30,7 +30,6 @@ class AuthController {
     }
 
     signin(req, res, next) {
-        console.log("authcontroller userID = " + req.user.userID)
         res.status(200).json({ token: tokenForUser(req.user), userID: req.user.userID });
     }
 

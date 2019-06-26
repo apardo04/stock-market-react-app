@@ -1,13 +1,16 @@
 import {useState, useEffect} from 'react';
 import { Button } from 'antd';
 import Axios from 'axios';
+import Loader from 'react-loader-spinner'
 import Stock from './Stock';
 
 const GetStock = (props) => {
-  const [stock, setStock] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [color, setColor] = useState("black")
+  const [stock, setStock] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [color, setColor] = useState("black");
 
   const search = searchValue => { 
     console.log("%c search function called for = " + searchValue, 'background: grey; color:red')
@@ -33,10 +36,12 @@ const GetStock = (props) => {
     })
   }
 
-  const addToPortfolio = () => {
-    Axios.post(`${process.env.BASE_URL}/api/stocks?userID=${props.id}&stock=${stock.symbol}`, () => {})
+  const addToPortfolio = (id, symbol) => {
+    setIsAdding(true);
+    Axios.post(`${process.env.BASE_URL}/api/stocks?userID=${id}&stock=${symbol}`, () => {})
     .then(function (res) {
       console.log(res);
+      setIsAdding(false);
       props.getUserStocks(props.id)
     })
     .catch(function (error) {
@@ -46,9 +51,11 @@ const GetStock = (props) => {
   }
 
   const deleteFromPortfolio = symbol => {
+    setIsRemoving(true);
     Axios.delete(`${process.env.BASE_URL}/api/stocks?userID=${props.id}&stock=${symbol}`, () => {})
     .then(function (res) {
       console.log(res);
+      setIsRemoving(false);
       props.getUserStocks(props.id)
     })
     .catch(function (error) {
@@ -64,7 +71,12 @@ const GetStock = (props) => {
   return(
     <React.Fragment>
       {loading && !errorMessage ? 
-        (<span>loading...</span>) 
+        ( <Loader 
+          type="Oval"
+          color="#31a36e"
+          height="50"	
+          width="50"
+        /> ) 
       : 
         errorMessage ? 
         <div className="rounded-lg mb-10 mr-10 xs:p-1 lg:w-full lg:p-6 xs:m-auto">
@@ -77,14 +89,14 @@ const GetStock = (props) => {
           <div className="col white">
             <Stock data={stock} color={color} modal={props.modal}/>
             <div className="btn-remove-container">
-              <Button type="primary" icon="delete" onClick={() => deleteFromPortfolio(stock.symbol)}>Remove From Portfolio</Button>
+              <Button type="primary" icon="delete" onClick={() => deleteFromPortfolio(stock.symbol)}>{ isRemoving ? " Removing" : "Remove From Portfolio" }</Button>
             </div>
           </div>
       :
           <div className="black">
             <Stock data={stock} color={color} />
             {props.loggedIn &&
-              <Button type="primary" onClick={addToPortfolio} className="">Add To Portfolio</Button>
+              <Button type="primary" onClick={() => addToPortfolio(props.id, stock.symbol)} className="">{ isAdding ? "Adding.." : "Add To Portfolio"}</Button>
             }
           </div>
       }

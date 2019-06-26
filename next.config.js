@@ -3,6 +3,7 @@ const path = require('path')
 const Dotenv = require('dotenv-webpack')
 const withLess = require('@zeit/next-less');
 const lessToJs = require('less-vars-to-js');
+const withCSS = require('@zeit/next-css');
 const fs = require('fs');
 
 // Where the antd.custom.less varaiables lives
@@ -16,9 +17,13 @@ const themeVariables = lessToJs(
 // fix errors when the less files are required by node, ie: server
 if(typeof require !== 'undefined') {
     require.extensions[".less"] = file => {};
+    require.extensions[".css"] = (file) => {};
 }
 
-module.exports = withLess({
+module.exports = withCSS(withLess({
+    cssLoaderOptions: {
+      url: false
+    },
     lessLoaderOptions:  {
         javascriptEnabled: true,
         modifyVars: themeVariables
@@ -40,7 +45,18 @@ module.exports = withLess({
             systemvars: true
           })
         ];
-    
+
+        config.module.rules.push({
+          test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
+          use: {
+            loader: 'url-loader',
+            options: {
+              limit: 100000,
+              name: '[name].[ext]'
+            }
+          }
+        })
+
         return config
       }
-})
+}))
