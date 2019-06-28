@@ -33,10 +33,17 @@ class AuthController {
         res.status(200).json({ token: tokenForUser(req.user), userID: req.user.userID });
     }
 
+    authenticate(req, res, next) {
+        let authenticated = jwt.decode(req.query.token, process.env.JWT_SECRET);
+        if (authenticated)
+            res.status(200).send(true);
+        else
+            res.status(404).send(false)
+    }
     getStocks(req, res, next) {
         pool.query(`SELECT stock FROM stock_app.userStocks WHERE userID='${req.query.userID}';`, (err, rows, fields) => {
             if (err) throw err
-            res.send(rows)
+            res.status(200).send(rows)
         })
     }
 
@@ -51,7 +58,7 @@ class AuthController {
                 }
             }
             else {
-                res.status(201).send(`Stock added`);
+                res.status(200).send(`Stock added`);
             }
         })
     }

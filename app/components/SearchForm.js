@@ -7,7 +7,6 @@ const SearchForm = (props) => {
     const [searchValue, setSearchValue] = useState("");
 
     const handleSearchInputChanges = (e) => {
-        console.log("handleSearchInputChanges")
         setSearchValue(e.target.value)
     }
 
@@ -16,8 +15,8 @@ const SearchForm = (props) => {
     }
 
     const callSearchFunction = (e) => {
-        props.search(searchValue)
-        console.log("callSearchFunction searchValue = " + searchValue)
+        if (searchValue != "")
+            props.search(searchValue)
         resetInputField()
     }
 

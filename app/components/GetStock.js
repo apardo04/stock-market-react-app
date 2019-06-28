@@ -19,7 +19,7 @@ const GetStock = (props) => {
 
     let dataArr = []
     Axios
-    .get(`https://sandbox.iexapis.com/stable/stock/${searchValue}/quote?token=Tpk_0e279c07400d4e8abbc68cf27ae41263&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap`)
+    .get(`https://cloud.iexapis.com/stable/stock/${searchValue}/quote?token=${process.env.IEX_TOKEN}&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap`)
     .then(res => {
         Object.entries(res.data).map(([key,value]) => 
           dataArr[key] = value

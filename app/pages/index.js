@@ -66,23 +66,22 @@ const Index = props => {
     useEffect(() => {
     let userID = localStorage.getItem("userID")
     let token = localStorage.getItem("stockAppToken");
+    let authenticated = false;
     if (token && userID) {
-        try {
-            let authenticated = jwt.decode(token, process.env.JWT_SECRET);
-            if (authenticated)
-                logIn(userID);
-            else
-                setErrorMessage(true);
-        }
-        catch {
-            setErrorMessage(true);
-        }
+        Axios.post(`${process.env.BASE_URL}/authenticate?token=${token}`)
+        .then(function (res) {
+            logIn(userID);
+        })
+        .catch(function (error) {
+            console.log(error);
+            setErrorMessage(true)
+        });
     }
     }, [])
 
     return(
         <Page>
-            { isLoading && !errorMessage ?         
+            { isLoading && !errorMessage ?
                 ( <Loader 
                     type="Oval"
                     color="#31a36e"

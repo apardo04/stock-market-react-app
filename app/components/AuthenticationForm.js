@@ -79,6 +79,7 @@ class AuthenticationForm extends Component {
                         getFieldDecorator("email", { rules: [{ required: true, message: "Please enter valid email" }] })(
                             <Input 
                                 name="email" 
+                                type="email"
                                 placeholder="Enter your email" 
                                 prefix={<Icon type="user"/>}
                             />
