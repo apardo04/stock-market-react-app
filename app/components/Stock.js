@@ -5,8 +5,8 @@ const Stock = props => {
                 {/*<div className="stock-image hidden">
                     <img onError={imageError} className="p-2" src={"https://storage.googleapis.com/iex/api/logos/" + props.data.symbol + ".png"} />
                 </div>*/}
-                <div className="mt-4 md:mt-0 md:ml-6">
-                    <span className="company-header green">{props.data.symbol} | {props.data.companyName}</span>
+                <div className="stock-info">
+                    <span className="stock-header green">{props.data.symbol} | {props.data.companyName}</span>
                     <ul>
                         <li>Current Price: <span className={props.color}>${parseFloat(props.data.latestPrice).toFixed(2).toLocaleString()}</span></li>
                         <li>Change: <span className={props.color}>${parseFloat(props.data.change).toFixed(2)}</span></li>
@@ -18,7 +18,10 @@ const Stock = props => {
                     </ul>
                 </div>
                 <style jsx>{`
-                    .company-header {
+                    .stock-info {
+                        margin-bottom: 0.25rem;
+                    }
+                    .stock-header {
                         display: block;
                         line-height: 1.25;
                         margin-top: 0.25rem;

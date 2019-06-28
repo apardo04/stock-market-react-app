@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import Axios from 'axios';
 import Page from '../layouts/page';
-import { Row, Col, Modal, Button } from 'antd';
+import { Row, Icon, Col } from 'antd';
+import Loader from 'react-loader-spinner'
 import AuthenticationForm from '../components/AuthenticationForm'
 import SearchForm from  '../components/SearchForm'
 import GetStock from '../components/GetStock';
@@ -17,13 +18,16 @@ const Index = props => {
     const [stockModal, toggleStockModal] = useState(false)
     const [searchedStock, setSearchedStock] = useState("");
     const [userStocks, setUserStocks] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
 
 
     function logIn(id) {
+        setLoading(true);
         setLoggedIn(true);
-        getUserStocks(id)
+        getUserStocks(id);
+        setUserID(id);
+        setLoading(false);
     }
 
     function logOut() {
@@ -63,108 +67,128 @@ const Index = props => {
     let userID = localStorage.getItem("userID")
     let token = localStorage.getItem("stockAppToken");
     if (token && userID) {
-        let authenticated = jwt.decode(token, process.env.JWT_SECRET);
-        if (authenticated) {
-            setLoggedIn(true);
-            getUserStocks(userID);
-            setUserID(userID);
+        try {
+            let authenticated = jwt.decode(token, process.env.JWT_SECRET);
+            if (authenticated)
+                logIn(userID);
+            else
+                setErrorMessage(true);
+        }
+        catch {
+            setErrorMessage(true);
         }
     }
     }, [])
 
     return(
         <Page>
-            <Row type="flex" justify="center">        
-                {stockModal && 
-                    <div id="myModal" className="modal">
-                    <div className="modal-content">
-                        <span className="close green" onClick={() => toggleStockModal(false)}>&times;</span>
-                        <GetStock stockToFind={searchedStock} modal="true" id={userID} loggedIn={loggedIn} getUserStocks={getUserStocks} />
-                    </div>
-                    </div>
-                }
-                <SearchForm search={search} />
-            </Row>
-                { loggedIn ?
-                    <>
-                        <Row type="flex" justify="center"><a onClick={logOut}>Log Out</a></Row>
-                        <Row type="flex" justify="center">
-                            {userStocks.map((stock, index) => {
-                                return <GetStock stockToFind={stock} id={userID} portfolio={loggedIn} getUserStocks={getUserStocks} key={stock} />
-                            })}
-                        </Row>
-                    </>
-                :   
-                    !registerForm ?
-                    <>
-                        <Row type="flex" justify="center">Login or Register to create a portfolio</Row>
-                        <Row type="flex" justify="center">
-                            <div className="center"><AuthenticationForm view={LOGIN} logIn={logIn}/></div>
-                        </Row>
-                        <Row type="flex" justify="center">
-                            <a onClick={() => setRegisterForm(true)}>Click Here to Sign Up</a>
-                        </Row>
-                    </>
-                :
-                        <Row type="flex" justify="center">
-                            <div className="center"><AuthenticationForm view={REGISTER} /></div>
-                        </Row>
-                }
-            <style jsx global>{`
-                body {
-                    font-family: Avenir,Helvetica,sans-serif;
-                }
-                .green {
-                    color: #31a36e;
-                }
-                .red {
-                    color: #f5222d;
-                }
-                .white {
-                    color: white;
-                }
-                .black {
-                    color: black;
-                }
-                .center {
-                    text-align:center;
-                }
-                .modal {
-                    display: flex; /* Hidden by default */
-                    position: fixed; /* Stay in place */
-                    z-index: 1; /* Sit on top */
-                    left: 0;
-                    top: 0;
-                    width: 100%; /* Full width */
-                    height: 100%; /* Full height */
-                    overflow: auto; /* Enable scroll if needed */
-                    background-color: rgb(0,0,0); /* Fallback color */
-                    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-                }
-                
-                /* Modal Content/Box */
-                .modal-content {
-                    background-color: #fefefe;
-                    margin: 15% auto;
-                    padding: 20px;
-                    border: 1px solid #888;
-                    color: black;
-                }
-                
-                /* The Close Button */
-                .close {
-                    float: right;
-                    font-size: 64px;
-                    font-weight: bold;
-                }
-                
-                .close:hover,
-                .close:focus {
-                    color: black;
-                    text-decoration: none;
-                    cursor: pointer;
-                }
-            `}</style>
+            { isLoading && !errorMessage ?         
+                ( <Loader 
+                    type="Oval"
+                    color="#31a36e"
+                    height="100"	
+                    width="100"
+                    /> ) 
+            :
+                <>
+                    <Row type="flex" justify="center">        
+                        {stockModal && 
+                            <div id="myModal" className="modal" onClick={() => toggleStockModal(false)}>
+                            <div className="modal-content">
+                                <span className="close green" onClick={() => toggleStockModal(false)}><Icon type="close" /></span>
+                                <GetStock stockToFind={searchedStock} modal="true" id={userID} loggedIn={loggedIn} getUserStocks={getUserStocks} />
+                            </div>
+                            </div>
+                        }
+                        <SearchForm search={search} />
+                    </Row>
+                        { loggedIn ?
+                            <>
+                                <Row type="flex" justify="center"><a onClick={logOut}>Log Out</a></Row>
+                                <Row type="flex" justify="start">
+                                    {userStocks.map((stock, index) => {
+                                        return <Col xs={12} sm={12} md={6} lg={6} xl={6} className="stock-col"><GetStock stockToFind={stock} id={userID} portfolio={loggedIn} getUserStocks={getUserStocks} key={stock} /></Col>
+                                    })}
+                                </Row>
+                            </>
+                        :   
+                            !registerForm ?
+                            <>
+                                <Row type="flex" justify="center">Login or Register to create a portfolio</Row>
+                                <Row type="flex" justify="center">
+                                    <div className="center"><AuthenticationForm view={LOGIN} logIn={logIn}/></div>
+                                </Row>
+                                <Row type="flex" justify="center">
+                                    <a onClick={() => setRegisterForm(true)}>Click Here to Sign Up</a>
+                                </Row>
+                            </>
+                        :
+                                <Row type="flex" justify="center">
+                                    <div className="center"><AuthenticationForm view={REGISTER} /></div>
+                                </Row>
+                        }
+                        { errorMessage && <Row type="flex" justify="center"><span className="red">Could Not Authenticate Account</span></Row>}
+                    <style jsx global>{`
+                        body {
+                            font-family: Avenir,Helvetica,sans-serif;
+                        }
+                        .green {
+                            color: #31a36e;
+                        }
+                        .red {
+                            color: #f5222d;
+                        }
+                        .white {
+                            color: white;
+                        }
+                        .black {
+                            color: black;
+                        }
+                        .center {
+                            text-align:center;
+                        }
+                        .stock-col {
+                            margin-left: 8%;
+                            margin-top: 30px;
+                        }
+                        .modal {
+                            display: flex; /* Hidden by default */
+                            position: fixed; /* Stay in place */
+                            z-index: 1; /* Sit on top */
+                            left: 0;
+                            top: 0;
+                            width: 100%; /* Full width */
+                            height: 100%; /* Full height */
+                            overflow: auto; /* Enable scroll if needed */
+                            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+                        }
+                        .modal-content {
+                            background-color: #010912;
+                            margin: auto;
+                            padding: 20px;
+                            border: 1px solid white;
+                            border-radius: 6px;
+                        }
+                        .close {
+                            float: right;
+                            font-size: 28px;
+                            font-weight: bold;
+                        }
+                        .close:hover,
+                        .close:focus {
+                            color: white;
+                            text-decoration: none;
+                            cursor: pointer;
+                        }
+                        @media only screen and (max-width: 576px) {
+                            .stock-col {
+                                text-align: center;
+                                width: 100%;
+                            }
+                        }
+                    `}</style>
+                </>
+            }
         </Page>
     )
 };

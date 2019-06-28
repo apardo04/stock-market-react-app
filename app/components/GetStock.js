@@ -86,38 +86,21 @@ const GetStock = (props) => {
         </div>
       :
         props.portfolio ?
-          <div className="col white">
+          <div className="white">
             <Stock data={stock} color={color} modal={props.modal}/>
             <div className="btn-remove-container">
-              <Button type="primary" icon="delete" onClick={() => deleteFromPortfolio(stock.symbol)}>{ isRemoving ? " Removing" : "Remove From Portfolio" }</Button>
+              <Button type="default" icon="delete" onClick={() => deleteFromPortfolio(stock.symbol)}>{ isRemoving ? " Removing" : "Remove From Portfolio" }</Button>
             </div>
           </div>
       :
-          <div className="black">
+          <div className="white">
             <Stock data={stock} color={color} />
             {props.loggedIn &&
-              <Button type="primary" onClick={() => addToPortfolio(props.id, stock.symbol)} className="">{ isAdding ? "Adding.." : "Add To Portfolio"}</Button>
+              <Button type="default" icon="plus" onClick={() => addToPortfolio(props.id, stock.symbol)} className="">{ isAdding ? "Adding.." : "Add To Portfolio"}</Button>
             }
           </div>
       }
       <style jsx>{`
-          .col {
-            box-sizing: border-box;
-            width: 20%;
-          }
-          .col:nth-child(odd) {
-            margin-right: 0.5rem
-          }
-          .col:nth-child(even) {
-            margin-left: 0.5rem;
-          }
-          .col:not(:nth-child(0)),
-          .col:not(:nth-child(0)) {
-            margin-top: 1rem;
-          }
-          .btn-remove-container {
-              margin-top: .75rem;
-          }
       `}</style>
     </React.Fragment>
   )
