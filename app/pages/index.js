@@ -21,6 +21,7 @@ const Index = props => {
     const [isLoading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
 
+    const IEX = process.env.NODE_ENV !== 'production' ? ["sandbox", `${process.env.IEX_TEST_TOKEN}`] : ["cloud",`${process.env.IEX_TOKEN}`];
 
     function logIn(id) {
         setLoading(true);
@@ -95,7 +96,7 @@ const Index = props => {
                             <div id="myModal" className="modal" onClick={() => toggleStockModal(false)}>
                             <div className="modal-content">
                                 <span className="close green" onClick={() => toggleStockModal(false)}><Icon type="close" /></span>
-                                <GetStock stockToFind={searchedStock} modal="true" id={userID} loggedIn={loggedIn} getUserStocks={getUserStocks} />
+                                <GetStock stockToFind={searchedStock} modal="true" id={userID} loggedIn={loggedIn} getUserStocks={getUserStocks} IEX={IEX} />
                             </div>
                             </div>
                         }
@@ -106,7 +107,7 @@ const Index = props => {
                                 <Row type="flex" justify="center"><a onClick={logOut}>Log Out</a></Row>
                                 <Row type="flex" justify="start">
                                     {userStocks.map((stock, index) => {
-                                        return <Col xs={12} sm={12} md={6} lg={6} xl={6} className="stock-col"><GetStock stockToFind={stock} id={userID} portfolio={loggedIn} getUserStocks={getUserStocks} key={stock} /></Col>
+                                        return <Col xs={12} sm={12} md={6} lg={6} xl={6} className="stock-col" key={stock}><GetStock stockToFind={stock} id={userID} portfolio={loggedIn} getUserStocks={getUserStocks} IEX={IEX} /></Col>
                                     })}
                                 </Row>
                             </>
@@ -136,6 +137,9 @@ const Index = props => {
                         }
                         .red {
                             color: #f5222d;
+                        }
+                        .yellow {
+                            color: #e3c322;
                         }
                         .white {
                             color: white;
@@ -183,6 +187,7 @@ const Index = props => {
                             .stock-col {
                                 text-align: center;
                                 width: 100%;
+                                margin-left: 0;
                             }
                         }
                     `}</style>

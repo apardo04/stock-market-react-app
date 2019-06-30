@@ -8,13 +8,20 @@ const Stock = props => {
                 <div className="stock-info">
                     <span className="stock-header green">{props.data.symbol} | {props.data.companyName}</span>
                     <ul>
-                        <li>Current Price: <span className={props.color}>${parseFloat(props.data.latestPrice).toFixed(2).toLocaleString()}</span></li>
-                        <li>Change: <span className={props.color}>${parseFloat(props.data.change).toFixed(2)}</span></li>
-                        <li>Change Percent: <span className={props.color}>{(props.data.changePercent * 100).toFixed(2)}%</span></li>
-                        <li>PE Ratio: <span>{props.data.peRatio}</span></li>
+                        <li>Current Price: <span className={props.data.color}>${parseFloat(props.data.latestPrice).toFixed(2).toLocaleString()}</span></li>
+                        <li>Change: <span className={props.data.color}>${parseFloat(props.data.change).toFixed(2)}</span></li>
+                        <li>Change Percent: <span className={props.data.color}>{(props.data.changePercent * 100).toFixed(2)}%</span></li>
+                        { props.data.peRatio != null &&
+                            <li>PE Ratio: <span>{props.data.peRatio}</span></li>
+                        } 
+                        { props.data.dividendYield != "" &&
+                            <li>Dividend Yield: <span>{(props.data.dividendYield * 100).toFixed(2)}%</span></li>
+                        }
                         <li>Volume: <span>{parseFloat(props.data.latestVolume).toLocaleString()}</span></li>
                         <li>Average Volume: <span>{parseFloat(props.data.avgTotalVolume).toLocaleString()}</span></li>
-                        <li>Market Cap: <span>{parseFloat(props.data.marketCap).toLocaleString()}</span></li>
+                        { props.data.marketCap != 0 &&
+                            <li>Market Cap: <span>{parseFloat(props.data.marketCap).toLocaleString()}</span></li>
+                        }
                     </ul>
                 </div>
                 <style jsx>{`

@@ -4,6 +4,8 @@ app/.next/
 
 server/db.config.js
 
+utils
+
 .env
 .DS_Store
 

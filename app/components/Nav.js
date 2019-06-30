@@ -5,10 +5,13 @@ import PropTypes from 'prop-types';
 export default function Nav() {
   return(
     <nav>
-        <div className="left width logo">
+        <div className="left width-33 logo">
           <a href="/"><img src="/static/images/logo.png"></img></a>
         </div>
-        <div className="left width logo-text">Stock Portfolio</div>
+        <div className="left width-33 logo-text">
+          Stockify App<br/>
+          <span className="marketing-text">Investment Portfolio</span>
+        </div>
       <style jsx>{`
         nav {
           height: 160px;
@@ -20,9 +23,12 @@ export default function Nav() {
           font-family: 'Cinzel', serif;
           text-align: center;
           max-width: 30%;
-          font-size: 3rem;
+          font-size: 3.2rem;
         }
-        .width {
+        .marketing-text {
+            font-size: 1.8rem;
+        }
+        .width-33 {
           width: 33.3%;
         }
         .left {
@@ -34,6 +40,9 @@ export default function Nav() {
           }
           .logo img {
             width:100%;
+          }
+          .marketing-text {
+            display: none;
           }
         }
       `}</style>

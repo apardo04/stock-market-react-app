@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react';
-import { Layout } from 'antd';
 import Head from '../components/Head'
 import Nav from '../components/Nav'
 
 const Page = ({ children }) => (
     <Fragment>
-        <Head />
+        <Head title="Stockify App"/>
         <Nav />
         <main>
             {children}

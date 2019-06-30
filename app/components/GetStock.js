@@ -10,7 +10,6 @@ const GetStock = (props) => {
   const [isAdding, setIsAdding] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [color, setColor] = useState("black");
 
   const search = searchValue => { 
     console.log("%c search function called for = " + searchValue, 'background: grey; color:red')
@@ -19,20 +18,31 @@ const GetStock = (props) => {
 
     let dataArr = []
     Axios
-    .get(`https://cloud.iexapis.com/stable/stock/${searchValue}/quote?token=${process.env.IEX_TOKEN}&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap`)
+    .get(`https://${props.IEX[0]}.iexapis.com/stable/stock/${searchValue}/quote?token=${props.IEX[1]}&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap`)
     .then(res => {
         Object.entries(res.data).map(([key,value]) => 
           dataArr[key] = value
-        )        
-        setColor((dataArr["changePercent"].toString()[0] == '-') ? "red" : "green")
-        setStock(dataArr)
-        setLoading(false)
+        )
+        dataArr["color"] = (dataArr["changePercent"].toString()[0] == '-') ? "red" : "green"
+        
+        setLoading(false);
     })
     .catch(function (error) {
         if (error.response) {
-        setErrorMessage(error.response.data)
-        setLoading(false);
+          setErrorMessage(error.response.data)
+          setLoading(false);
         }
+    })
+    Axios
+    .get(`https://${props.IEX[0]}.iexapis.com/stable/stock/${searchValue}/stats/dividendYield?token=${props.IEX[1]}`)
+    .then(res => {
+      console.log(res + "div yield")
+      dataArr["dividendYield"] = res.data;
+      setStock(dataArr);
+    })
+    .catch(function (error) {
+      dataArr["dividendYield"] = "";
+      setStock(dataArr);
     })
   }
 
@@ -42,7 +52,7 @@ const GetStock = (props) => {
     .then(function (res) {
       console.log(res);
       setIsAdding(false);
-      props.getUserStocks(props.id)
+      props.getUserStocks(props.id);
     })
     .catch(function (error) {
       console.log(error);
@@ -87,14 +97,14 @@ const GetStock = (props) => {
       :
         props.portfolio ?
           <div className="white">
-            <Stock data={stock} color={color} modal={props.modal}/>
+            <Stock data={stock} modal={props.modal}/>
             <div className="btn-remove-container">
               <Button type="default" icon="delete" onClick={() => deleteFromPortfolio(stock.symbol)}>{ isRemoving ? " Removing" : "Remove From Portfolio" }</Button>
             </div>
           </div>
       :
           <div className="white">
-            <Stock data={stock} color={color} />
+            <Stock data={stock} />
             {props.loggedIn &&
               <Button type="default" icon="plus" onClick={() => addToPortfolio(props.id, stock.symbol)} className="">{ isAdding ? "Adding.." : "Add To Portfolio"}</Button>
             }
