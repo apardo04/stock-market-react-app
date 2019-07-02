@@ -1,5 +1,5 @@
 {
-  "name": "StockPortfolioDashboard",
+  "name": "Stockify.app",
   "version": "1.0.0",
   "description": "",
   "main": "./app/index.js",
@@ -13,9 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.19",
-    "@fortawesome/free-solid-svg-icons": "^5.9.0",
-    "@fortawesome/react-fontawesome": "^0.1.4",
     "antd": "^3.19.7",
     "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
