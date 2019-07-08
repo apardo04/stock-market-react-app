@@ -13,7 +13,7 @@ const Page = ({ children }) => {
       });
     return (
         <Fragment>
-            <Head title="Stockify App"/>
+            <Head title="Stockify App | Stock Investment Portfolio"/>
             <Nav />
             <main>
                 {children}

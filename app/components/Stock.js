@@ -1,10 +1,19 @@
 const Stock = props => {
-    let imageError = (ev) => ev.target.src = "static/assets/images/404_img.jpg"
+    let marketCap = Math.abs(Number(parseFloat(props.data.marketCap)));
+    const marketCapConverter = () => {
+        return marketCap >= 1.0e+12
+            ? (marketCap / 1.0e+12).toFixed(2) + "T"
+            : marketCap >= 1.0e+9
+            ? (marketCap / 1.0e+9).toFixed(2) + "B"
+            : marketCap >= 1.0e+6
+            ? (marketCap / 1.0e+6).toFixed(2) + "M"
+            : marketCap >= 1.0e+3
+            ? (marketCap / 1.0e+3).toFixed(2) + "K"
+            : marketCap;
+    }
+
     return (    
         <React.Fragment>
-                {/*<div className="stock-image hidden">
-                    <img onError={imageError} className="p-2" src={"https://storage.googleapis.com/iex/api/logos/" + props.data.symbol + ".png"} />
-                </div>*/}
                 <div className="stock-info">
                     <span className="stock-header green">{props.data.symbol} | {props.data.companyName}</span>
                     <ul>
@@ -17,11 +26,11 @@ const Stock = props => {
                         { props.data.dividendYield != "" &&
                             <li>Dividend Yield: <span>{(props.data.dividendYield * 100).toFixed(2)}%</span></li>
                         }
+                        { marketCap != 0 &&
+                            <li>Market Cap: <span>{marketCapConverter()}</span></li>
+                        }
                         <li>Volume: <span>{parseFloat(props.data.latestVolume).toLocaleString()}</span></li>
                         <li>Average Volume: <span>{parseFloat(props.data.avgTotalVolume).toLocaleString()}</span></li>
-                        { props.data.marketCap != 0 &&
-                            <li>Market Cap: <span>{parseFloat(props.data.marketCap).toLocaleString()}</span></li>
-                        }
                     </ul>
                 </div>
                 <style jsx>{`

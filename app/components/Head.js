@@ -2,9 +2,9 @@ import React from 'react'
 import NextHead from 'next/head'
 import { string } from 'prop-types'
 
-const defaultDescription = 'Stock Portfolio'
-const defaultOGURL = ''
-const defaultOGImage = ''
+const defaultDescription = 'Keep track of your stock portfolio today.'
+const defaultOGURL = 'https://stockify.app'
+const defaultOGImage = 'https://stockify.app/static/images/logo.png'
 
 const Head = props => (
   <React.Fragment>
@@ -23,10 +23,7 @@ const Head = props => (
       <link href="https://fonts.googleapis.com/css?family=Cinzel&display=swap" rel="stylesheet"></link>
       <meta property="og:url" content={props.url || defaultOGURL} />
       <meta property="og:title" content={props.title || ''} />
-      <meta
-        property="og:description"
-        content={props.description || defaultDescription}
-      />
+      <meta property="og:description" content={props.description || defaultDescription} />
       <meta name="twitter:site" content={props.url || defaultOGURL} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:image" content={props.ogImage || defaultOGImage} />
