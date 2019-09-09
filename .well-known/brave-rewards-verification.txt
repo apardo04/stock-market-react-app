@@ -1,4 +1,0 @@
-This is a Brave Rewards publisher verification file.
-
-Domain: stockify.app
-Token: 722eff08b2c439fd25db963da71c73e23aa5b564c0eb717de8de40fc6e82c1c2

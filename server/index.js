@@ -34,6 +34,14 @@ app.prepare().then(() => {
 
     server.use(AppRouter);
 
+    server.get("/.well-known/brave-rewards-verification.txt", (req, res) => {
+        console.log("requested brave")
+        res.send(`<pre style="word-wrap: break-word; white-space: pre-wrap;">This is a Brave Rewards publisher verification file.
+        		Domain: stockify.app
+			Token: 722eff08b2c439fd25db963da71c73e23aa5b564c0eb717de8de40fc6e82c1c2
+		</pre>`);
+    });
+
     server.get("*", (req ,res) => {
         const parsedUrl = parse(req.url, true);
         const { pathname, query = {} } = parsedUrl;
