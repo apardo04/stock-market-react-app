@@ -96,7 +96,7 @@ const Index = props => {
                             <div id="myModal" className="modal" onClick={() => toggleStockModal(false)}>
                             <div className="modal-content">
                                 <span className="close green" onClick={() => toggleStockModal(false)}><Icon type="close" /></span>
-                                <GetStock stockToFind={searchedStock} modal="true" id={userID} loggedIn={loggedIn} getUserStocks={getUserStocks} IEX={IEX} />
+                                <GetStock stockToFind={searchedStock} modal={true} id={userID} loggedIn={loggedIn} getUserStocks={getUserStocks} IEX={IEX} />
                             </div>
                             </div>
                         }
@@ -107,7 +107,7 @@ const Index = props => {
                                 <Row type="flex" justify="center"><a onClick={logOut}>Log Out</a></Row>
                                 <Row type="flex" justify="start">
                                     {userStocks.map((stock, index) => {
-                                        return <Col xs={12} sm={12} md={6} lg={6} xl={6} className="stock-col" key={stock}><GetStock stockToFind={stock} id={userID} portfolio={loggedIn} getUserStocks={getUserStocks} IEX={IEX} /></Col>
+                                        return <Col xs={12} sm={12} md={6} lg={6} xl={6} className="stock-col" key={stock}><GetStock stockToFind={stock} modal={false} id={userID} portfolio={loggedIn} getUserStocks={getUserStocks} IEX={IEX} /></Col>
                                     })}
                                 </Row>
                             </>

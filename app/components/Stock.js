@@ -26,11 +26,14 @@ const Stock = props => {
                         { props.data.dividendYield != "" &&
                             <li>Dividend Yield: <span>{(props.data.dividendYield * 100).toFixed(2)}%</span></li>
                         }
-                        { marketCap != 0 &&
+                        { marketCap != 0 && props.data.marketCap !== null &&
                             <li>Market Cap: <span>{marketCapConverter()}</span></li>
                         }
-                        <li>Volume: <span>{parseFloat(props.data.latestVolume).toLocaleString()}</span></li>
+                        { props.data.latestVolume !== null &&
+                            <li>Volume: <span>{parseFloat(props.data.latestVolume).toLocaleString()}</span></li>
+                        }
                         <li>Average Volume: <span>{parseFloat(props.data.avgTotalVolume).toLocaleString()}</span></li>
+                        <li>Latest News: <a href={props.data.newsUrl} target="_blank"> {props.data.newsHeadline}</a></li>
                     </ul>
                 </div>
                 <style jsx>{`

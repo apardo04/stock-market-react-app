@@ -10,52 +10,68 @@ const GetStock = (props) => {
   const [isAdding, setIsAdding] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  let dataArr = []
 
-  const search = searchValue => { 
-    console.log("%c search function called for = " + searchValue, 'background: grey; color:red')
-    setLoading(true);
-    setErrorMessage(null);
-
-    let dataArr = []
-    Axios
+  const getStockData = searchValue => {
+    return Axios
     .get(`https://${props.IEX[0]}.iexapis.com/stable/stock/${searchValue}/quote?token=${props.IEX[1]}&filter=symbol,companyName,latestPrice,change,changePercent,peRatio,latestVolume,avgTotalVolume,marketCap`)
     .then(res => {
         Object.entries(res.data).map(([key,value]) => 
           dataArr[key] = value
         )
         dataArr["color"] = (dataArr["changePercent"].toString()[0] == '-') ? "red" : "green"
-        
-        setLoading(false);
     })
     .catch(function (error) {
         if (error.response) {
           setErrorMessage(error.response.data)
-          setLoading(false);
         }
     })
-    Axios
+  }
+  const getStockNews = searchValue => {
+    return Axios
+    .get(`https://${props.IEX[0]}.iexapis.com/stable/stock/${searchValue}/news/last/1?token=${props.IEX[1]}`)
+    .then(res => {
+      dataArr["newsUrl"] = res.data[0].url;
+      dataArr["newsHeadline"] = res.data[0].headline;
+    })
+    .catch(function (error) {
+      if (error.response) {
+        setErrorMessage(error.response.data)
+      }
+    })
+  }
+
+  const getStockDiv = searchValue => {
+    return Axios
     .get(`https://${props.IEX[0]}.iexapis.com/stable/stock/${searchValue}/stats/dividendYield?token=${props.IEX[1]}`)
     .then(res => {
-      console.log(res + "div yield")
       dataArr["dividendYield"] = res.data;
-      setStock(dataArr);
     })
     .catch(function (error) {
       dataArr["dividendYield"] = "";
-      setStock(dataArr);
     })
+  }
+  const getAllStockData = searchValue => { 
+    console.log("%c search function called for = " + searchValue, 'background: grey; color:red')
+    setLoading(true);
+    setErrorMessage(null);
+    
+    Axios.all([getStockData(searchValue), getStockNews(searchValue), getStockDiv(searchValue)])
+    .then(Axios.spread(function(acct, perms) {
+      setStock(dataArr);
+      setLoading(false);
+    }))
+    
   }
 
   const addToPortfolio = (id, symbol) => {
     setIsAdding(true);
     Axios.post(`${process.env.BASE_URL}/api/stocks?userID=${id}&stock=${symbol}`, () => {})
     .then(function (res) {
-      console.log(res);
       setIsAdding(false);
       props.getUserStocks(props.id);
     })
     .catch(function (error) {
-      console.log(error);
       setErrorMessage(error.response.data)
     });
   }
@@ -64,7 +80,6 @@ const GetStock = (props) => {
     setIsRemoving(true);
     Axios.delete(`${process.env.BASE_URL}/api/stocks?userID=${props.id}&stock=${symbol}`, () => {})
     .then(function (res) {
-      console.log(res);
       setIsRemoving(false);
       props.getUserStocks(props.id)
     })
@@ -74,10 +89,9 @@ const GetStock = (props) => {
   }
 
   useEffect(() => {  
-    search(props.stockToFind)  
+    getAllStockData(props.stockToFind)  
   }, [])
   
-
   return(
     <React.Fragment>
       {loading && !errorMessage ? 
@@ -104,7 +118,7 @@ const GetStock = (props) => {
           </div>
       :
           <div className="white">
-            <Stock data={stock} />
+            <Stock data={stock} modal={props.modal} />
             {props.loggedIn &&
               <Button type="default" icon="plus" onClick={() => addToPortfolio(props.id, stock.symbol)} className="">{ isAdding ? "Adding.." : "Add To Portfolio"}</Button>
             }
