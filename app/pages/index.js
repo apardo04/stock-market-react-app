@@ -6,7 +6,7 @@ import Loader from 'react-loader-spinner'
 import AuthenticationForm from '../components/AuthenticationForm'
 import SearchForm from  '../components/SearchForm'
 import GetStock from '../components/GetStock';
-import jwt from 'jwt-simple';
+import SectorData from '../components/SectorData';
 
 export const LOGIN = "login";
 export const REGISTER = "register";
@@ -113,19 +113,22 @@ const Index = props => {
                             </>
                         :   
                             !registerForm ?
-                            <>
-                                <Row type="flex" justify="center">Login or Register to create a portfolio</Row>
-                                <Row type="flex" justify="center">
-                                    <div className="center"><AuthenticationForm view={LOGIN} logIn={logIn}/></div>
-                                </Row>
-                                <Row type="flex" justify="center">
-                                    <a onClick={() => setRegisterForm(true)}>Click Here to Sign Up</a>
-                                </Row>
-                            </>
-                        :
+                                <>
+                                    <Row type="flex" justify="center">Login or Register to create a portfolio</Row>
+                                    <Row type="flex" justify="center">
+                                        <div className="center"><AuthenticationForm view={LOGIN} logIn={logIn}/></div>
+                                    </Row>
+                                    <Row type="flex" justify="center">
+                                        <a onClick={() => setRegisterForm(true)}>Click Here to Sign Up</a>
+                                    </Row>                          
+                                </>
+                            :
                                 <Row type="flex" justify="center">
                                     <div className="center"><AuthenticationForm view={REGISTER} /></div>
                                 </Row>
+                        }
+                        {
+                            <SectorData data={props.secData} />
                         }
                         { errorMessage && <Row type="flex" justify="center"><span className="red">Could Not Authenticate Account</span></Row>}
                     <style jsx global>{`
@@ -196,5 +199,12 @@ const Index = props => {
         </Page>
     )
 };
+
+Index.getInitialProps = async function() {
+    const res = await fetch(`https://www.alphavantage.co/query?function=SECTOR&apikey=${process.env.ALPHA_TOKEN}`);
+    const secData = await res.json();
+    return { secData };
+}
+
 
 export default Index;
