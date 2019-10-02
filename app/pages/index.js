@@ -128,7 +128,8 @@ const Index = props => {
                                 </Row>
                         }
                         {
-                           
+                            Object.entries(props.secData).length !== 0 &&
+                                <SectorData data={props.secData} />             
                         }
                         { errorMessage && <Row type="flex" justify="center"><span className="red">Could Not Authenticate Account</span></Row>}
                     <style jsx global>{`
