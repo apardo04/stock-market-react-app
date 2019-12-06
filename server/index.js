@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require('express');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 const uuid = require('uuid');
 const bodyParser = require('body-parser');
 const { parse } = require('url');
@@ -19,11 +20,13 @@ const routes = getRoutes();
 
 app.prepare().then(() => {
     const server = express();
-
+    var fileStoreOptions = {};
+    
     server.use(
         session({
             secret: uuid.v1(),
-            name: "sessionId",
+            store: new FileStore(fileStoreOptions),
+	    name: "sessionId",
             resave: true,
             saveUninitialized: true
         })

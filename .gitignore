@@ -8,3 +8,5 @@ server/db.config.js
 .DS_Store
 
 notes.txt
+
+sessions/
