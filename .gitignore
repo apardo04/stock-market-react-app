@@ -10,3 +10,5 @@ server/db.config.js
 notes.txt
 
 sessions/
+
+mysql_scripts.txt

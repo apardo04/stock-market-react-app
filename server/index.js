@@ -9,7 +9,7 @@ const next = require('next');
 const AppRouter = require('./routes/AppRouter');
 
 const dev = process.env.NODE_ENV !== 'production';
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 const app = next({ dir: "./app", dev });
 const handle = app.getRequestHandler();
