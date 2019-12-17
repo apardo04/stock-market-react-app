@@ -102,39 +102,42 @@ const Index = props => {
                         }
                         <SearchForm search={search} />
                     </Row>
-                        { loggedIn ?
+                    { loggedIn ?
+                        <>
+                            <Row type="flex" justify="center"><a onClick={logOut}>Log Out</a></Row>
+                            <Row type="flex" justify="start">
+                                {userStocks.map((stock, index) => {
+                                    return <Col xs={12} sm={12} md={6} lg={6} xl={6} className="stock-col" key={stock}><GetStock stockToFind={stock} modal={false} id={userID} portfolio={loggedIn} getUserStocks={getUserStocks} IEX={IEX} /></Col>
+                                })}
+                            </Row>
+                        </>
+                    :   
+                        !registerForm ?
                             <>
-                                <Row type="flex" justify="center"><a onClick={logOut}>Log Out</a></Row>
-                                <Row type="flex" justify="start">
-                                    {userStocks.map((stock, index) => {
-                                        return <Col xs={12} sm={12} md={6} lg={6} xl={6} className="stock-col" key={stock}><GetStock stockToFind={stock} modal={false} id={userID} portfolio={loggedIn} getUserStocks={getUserStocks} IEX={IEX} /></Col>
-                                    })}
-                                </Row>
-                            </>
-                        :   
-                            !registerForm ?
-                                <>
-                                    <Row type="flex" justify="center">Login or Register to create a portfolio</Row>
-                                    <Row type="flex" justify="center">
-                                        <div className="center"><AuthenticationForm view={LOGIN} logIn={logIn}/></div>
-                                    </Row>
-                                    <Row type="flex" justify="center">
-                                        <a onClick={() => setRegisterForm(true)}>Click Here to Sign Up</a>
-                                    </Row>                          
-                                </>
-                            :
+                                <Row type="flex" justify="center">Login or Register to create a portfolio</Row>
                                 <Row type="flex" justify="center">
-                                    <div className="center"><AuthenticationForm view={REGISTER} /></div>
+                                    <div className="center"><AuthenticationForm view={LOGIN} logIn={logIn}/></div>
                                 </Row>
-                        }
-                        {
-                            Object.entries(props.secData).length !== 0 &&
-                                <SectorData data={props.secData} />             
-                        }
-                        { errorMessage && <Row type="flex" justify="center"><span className="red">Could Not Authenticate Account</span></Row>}
+                                <Row type="flex" justify="center">
+                                    <a onClick={() => setRegisterForm(true)}>Click Here to Sign Up</a>
+                                </Row>                          
+                            </>
+                        :
+                            <Row type="flex" justify="center">
+                                <div className="center"><AuthenticationForm view={REGISTER} /></div>
+                            </Row>
+                    }
+                    {
+                        Object.entries(props.secData).length !== 0 &&
+                            <SectorData data={props.secData} />             
+                    }
+                    { errorMessage && <Row type="flex" justify="center"><span className="red">Could Not Authenticate Account</span></Row>}
                     <style jsx global>{`
                         body {
                             font-family: Avenir,Helvetica,sans-serif;
+                        }
+                        .left {
+                            float: left;
                         }
                         .green {
                             color: #31a36e;
@@ -187,6 +190,13 @@ const Index = props => {
                             text-decoration: none;
                             cursor: pointer;
                         }
+                        /* Mobile CSS */
+                        @media only screen and (max-width: 768px) {
+                            .modal {
+                                position: relative;
+                            }
+                        }
+                        /* Small Mobile CSS */
                         @media only screen and (max-width: 576px) {
                             .stock-col {
                                 text-align: center;
