@@ -5,7 +5,7 @@ export default function Nav() {
   return(
     <Row type="flex" justify="center">
       <div className="left whole medium-one-thirds logo">
-        <a href="/"><img src="/static/images/logo.png"></img></a>
+        <a href="/"><img src="/images/logo.png"></img></a>
       </div>
       <div className="left whole medium-one-thirds medium-one-thirds-margin-right logo-text">
         Stockify App<br/>

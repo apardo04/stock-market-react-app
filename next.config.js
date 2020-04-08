@@ -21,42 +21,56 @@ if(typeof require !== 'undefined') {
 }
 
 module.exports = withCSS(withLess({
-    cssLoaderOptions: {
-      url: false
-    },
     lessLoaderOptions:  {
         javascriptEnabled: true,
         modifyVars: themeVariables
     },
-    webpack: config => {
-        // Fixes npm packages that depend on `fs` module
-        config.node = {
-          fs: 'empty'
-        }
-        
-        config.plugins = config.plugins || [];
-    
-        config.plugins = [
-          ...config.plugins,
-    
-          // Read the .env file
-          new Dotenv({
-            path: path.join(__dirname, ".env"),
-            systemvars: true
-          })
-        ];
-
-        config.module.rules.push({
-          test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
-          use: {
-            loader: 'url-loader',
-            options: {
-              limit: 100000,
-              name: '[name].[ext]'
-            }
-          }
-        })
-
-        return config
+    webpack: (config, { isServer }) => {
+      // Fixes npm packages that depend on `fs` module
+      config.node = {
+        fs: 'empty'
       }
+      config.plugins = config.plugins || [];
+    
+      config.plugins = [
+        ...config.plugins,
+  
+        // Read the .env file
+        new Dotenv({
+          path: path.join(__dirname, ".env"),
+          systemvars: true
+        })
+      ];
+      config.module.rules.push({
+        test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 100000,
+            name: '[name].[ext]'
+          }
+        }
+      })
+      if (isServer) {
+        const antStyles = /antd\/.*?\/style.*?/
+        const origExternals = [...config.externals]
+        config.externals = [
+          (context, request, callback) => {
+            if (request.match(antStyles)) return callback()
+            if (typeof origExternals[0] === 'function') {
+              origExternals[0](context, request, callback)
+            } else {
+              callback()
+            }
+          },
+          ...(typeof origExternals[0] === 'function' ? [] : origExternals),
+        ]
+  
+        config.module.rules.unshift({
+          test: antStyles,
+          use: 'null-loader',
+        })
+      }
+      return config
+    },
 }))

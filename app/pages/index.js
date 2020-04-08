@@ -213,7 +213,9 @@ const Index = props => {
 
 Index.getInitialProps = async function() {
     const res = await fetch(`https://www.alphavantage.co/query?function=SECTOR&apikey=${process.env.ALPHA_TOKEN}`);
-    const secData = await res.json();
+    let secData = await res.json();
+    if(secData["Error Message"] || secData["Note"])
+        secData = {}
     return { secData };
 }
 

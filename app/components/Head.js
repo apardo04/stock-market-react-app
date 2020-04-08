@@ -4,7 +4,7 @@ import { string } from 'prop-types'
 
 const defaultDescription = 'Keep track of your stock portfolio today.'
 const defaultOGURL = 'https://stockify.app'
-const defaultOGImage = 'https://stockify.app/static/images/logo.png'
+const defaultOGImage = 'https://stockify.app/images/logo.png'
 
 const Head = props => (
   <React.Fragment>
@@ -16,10 +16,10 @@ const Head = props => (
         content={props.description || defaultDescription}
       />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" sizes="192x192" href="/static/images/logo.png" />
+      <link rel="icon" sizes="192x192" href="/images/logo.png" />
       <link rel="apple-touch-icon" href="" />
       <link rel="mask-icon" href="" color="#49B882" />
-      <link rel="icon" href="/static/images/logo.png" />
+      <link rel="icon" href="/images/logo.png" />
       <link href="https://fonts.googleapis.com/css?family=Cinzel&display=swap" rel="stylesheet"></link>
       <meta property="og:url" content={props.url || defaultOGURL} />
       <meta property="og:title" content={props.title || ''} />
